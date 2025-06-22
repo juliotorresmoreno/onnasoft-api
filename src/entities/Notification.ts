@@ -7,6 +7,7 @@ import {
   ManyToOne,
   JoinColumn,
   DeleteDateColumn,
+  Index,
 } from 'typeorm';
 import { User } from './User';
 
@@ -29,22 +30,24 @@ export class Notification {
   user: User;
 
   @Column()
-  userId: string;
+  userId: number;
 
-  @CreateDateColumn()
-  createdAt: Date;
+  @CreateDateColumn({ type: 'timestamptz', precision: 3 })
+  @Index()
+  created_at: Date;
 
-  @UpdateDateColumn()
-  updatedAt: Date;
+  @UpdateDateColumn({ type: 'timestamptz', precision: 3 })
+  @Index()
+  updated_at: Date;
 
   @DeleteDateColumn()
-  deletedAt: Date | null;
+  deleted_at: Date | null;
 
   constructor(partial: Partial<Notification>) {
     Object.assign(this, partial);
     this.read = this.read || false;
-    this.createdAt = this.createdAt || new Date();
-    this.updatedAt = this.updatedAt || new Date();
-    this.deletedAt = this.deletedAt || null;
+    this.created_at = this.created_at || new Date();
+    this.updated_at = this.updated_at || new Date();
+    this.deleted_at = this.deleted_at || null;
   }
 }

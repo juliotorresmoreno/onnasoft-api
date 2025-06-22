@@ -30,17 +30,17 @@ export class NotificationsService {
 
   async findAll(options?: FindManyOptions<Notification>) {
     let buildOptions: FindManyOptions<Notification> | undefined = {
-      where: { deletedAt: IsNull() },
+      where: { deleted_at: IsNull() },
       select: [
         'id',
         'title',
         'read',
         'metadata',
         'userId',
-        'createdAt',
-        'updatedAt',
+        'created_at',
+        'updated_at',
       ],
-      order: { createdAt: 'DESC' },
+      order: { created_at: 'DESC' },
       take: this.defaultLimit,
     };
     if (options) {
@@ -50,7 +50,7 @@ export class NotificationsService {
         select: options.select || buildOptions.select,
         order: options.order || buildOptions.order,
         take: options.take || buildOptions.take,
-        where: { ...options.where, deletedAt: IsNull() },
+        where: { ...options.where, deleted_at: IsNull() },
       };
     }
     const [notifications, count] =
@@ -63,8 +63,8 @@ export class NotificationsService {
         read: notification.read,
         metadata: notification.metadata,
         userId: notification.userId,
-        createdAt: notification.createdAt,
-        updatedAt: notification.updatedAt,
+        createdAt: notification.created_at,
+        updatedAt: notification.updated_at,
       })),
       total: count,
       skip: buildOptions.skip || 0,
@@ -86,16 +86,16 @@ export class NotificationsService {
     payload?: Partial<Notification>,
   ) {
     let buildOptions: FindManyOptions<Notification> | undefined = {
-      where: { deletedAt: IsNull() },
+      where: { deleted_at: IsNull() },
       select: ['id', 'title', 'read', 'metadata', 'userId'],
-      order: { createdAt: 'DESC' },
+      order: { deleted_at: 'DESC' },
       take: 100,
     };
     if (options) {
       buildOptions = {
         ...buildOptions,
         ...options,
-        where: { ...options.where, deletedAt: IsNull() },
+        where: { ...options.where, deleted_at: IsNull() },
       };
     }
     const notifications = await this.notificationRepository.find(buildOptions);

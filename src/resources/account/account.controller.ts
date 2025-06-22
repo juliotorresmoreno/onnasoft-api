@@ -43,7 +43,7 @@ export class AccountController {
       throw new UnauthorizedException('User not authenticated');
     }
 
-    return this.accountService.update(req.user.id, payload);
+    return this.accountService.update(+req.user.id, payload);
   }
 
   @SetMetadata('roles', [Role.User, Role.Admin])
@@ -58,7 +58,7 @@ export class AccountController {
       throw new UnauthorizedException('User not authenticated');
     }
 
-    return this.accountService.updatePassword(req.user.id, payload);
+    return this.accountService.updatePassword(+req.user.id, payload);
   }
 
   @SetMetadata('roles', [Role.User])
@@ -67,6 +67,6 @@ export class AccountController {
     if (!req.user || !req.user.id) {
       throw new UnauthorizedException('User not authenticated');
     }
-    return this.accountService.removeMe(req.user.id);
+    return this.accountService.removeMe(+req.user.id);
   }
 }

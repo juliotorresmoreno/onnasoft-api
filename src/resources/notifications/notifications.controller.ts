@@ -14,7 +14,7 @@ import { NotificationsService } from './notifications.service';
 import { IsNull } from 'typeorm';
 import { Role } from '@/types/role';
 import { User } from '@/entities/User';
-import { buildFindManyOptions, QueryParams } from '@/types/query';
+import { buildFindManyOptions, QueryParams } from '@/utils/query';
 import { Notification } from '@/entities/Notification';
 
 @Controller('notifications')
@@ -43,7 +43,7 @@ export class NotificationsController {
         {
           where: {
             id: id,
-            deletedAt: IsNull(),
+            deleted_at: IsNull(),
             userId: req.user.id,
           },
         },
@@ -66,7 +66,7 @@ export class NotificationsController {
     return this.notificationsService
       .updateAll(
         {
-          where: { userId: req.user.id, deletedAt: IsNull() },
+          where: { userId: req.user.id, deleted_at: IsNull() },
         },
         { read: true },
       )

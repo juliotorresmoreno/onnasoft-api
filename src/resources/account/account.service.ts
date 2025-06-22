@@ -17,7 +17,7 @@ export class AccountService {
     private readonly usersService: UsersService,
   ) {}
 
-  findOne(id: string) {
+  findOne(id: number) {
     return this.usersService.findOne({
       select: [
         'id',
@@ -27,14 +27,14 @@ export class AccountService {
         'timezone',
         'newsletter',
         'plan',
-        'createdAt',
-        'updatedAt',
+        'created_at',
+        'updated_at',
       ],
       where: { id },
     });
   }
 
-  async update(id: string, payload: UpdateAccountDto) {
+  async update(id: number, payload: UpdateAccountDto) {
     await this.usersService.update(id, payload).catch((error) => {
       throw new InternalServerErrorException(
         'Failed to update account',
@@ -68,7 +68,7 @@ export class AccountService {
     });
   }
 
-  async updatePassword(id: string, payload: UpdatePasswordDto) {
+  async updatePassword(id: number, payload: UpdatePasswordDto) {
     const hashedPassword = await hashPassword(payload.newPassword);
 
     const user = await this.usersService
@@ -131,7 +131,7 @@ export class AccountService {
     });
   }
 
-  removeMe(id: string) {
+  removeMe(id: number) {
     return this.usersService.remove(id).catch((error) => {
       throw new InternalServerErrorException(
         'Failed to delete account',

@@ -4,6 +4,7 @@ import {
   IsOptional,
   IsObject,
   ValidateNested,
+  IsArray,
 } from 'class-validator';
 import {
   FindManyOptions,
@@ -19,9 +20,16 @@ import {
   Not,
   In,
   Between,
+  FindOptionsSelect,
 } from 'typeorm';
 
 export class QueryParams<T> {
+  @IsOptional()
+  @IsArray()
+  @ValidateNested()
+  @Type(() => String)
+  select?: FindOptionsSelect<T>;
+
   @IsOptional()
   @IsObject()
   @ValidateNested()
@@ -36,11 +44,13 @@ export class QueryParams<T> {
 
   @IsOptional()
   @IsNumber()
+  @ValidateNested()
   @Type(() => Number)
   skip?: number;
 
   @IsOptional()
   @IsNumber()
+  @ValidateNested()
   @Type(() => Number)
   take?: number;
 }
@@ -90,6 +100,14 @@ export function buildFindManyOptions<T>(
         where[field] = operatorMap[op](raw);
       } else {
         where[field] = value;
+      }
+    } else if (key.startsWith('select[')) {
+      const field = key.slice(7, -1); // Remove 'select[' and ']'
+      if (!options.select) {
+        options.select = {};
+      }
+      if (query[key] === 'true') {
+        options.select[field] = true;
       }
     }
   }

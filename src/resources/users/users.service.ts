@@ -22,16 +22,16 @@ export class UsersService {
 
   findAll(options?: FindManyOptions<User>) {
     let buildOptions: FindManyOptions<User> | undefined = {
-      where: { deletedAt: IsNull() },
+      where: { deleted_at: IsNull() },
       select: ['id', 'name', 'email'],
-      order: { createdAt: 'DESC' },
+      order: { created_at: 'DESC' },
       take: 100,
     };
     if (options) {
       buildOptions = {
         ...buildOptions,
         ...options,
-        where: { ...options.where, deletedAt: IsNull() },
+        where: { ...options.where, deleted_at: IsNull() },
       };
     }
     return this.userRepository.find(buildOptions);
@@ -41,12 +41,12 @@ export class UsersService {
     return this.userRepository.findOne(options);
   }
 
-  async update(id: string, payload: Partial<User>) {
+  async update(id: number, payload: Partial<User>) {
     await this.userRepository.update(id, payload);
     return this.findOne({ where: { id } });
   }
 
-  async remove(id: string) {
+  async remove(id: number) {
     await this.userRepository.delete(id);
     return { deleted: true };
   }

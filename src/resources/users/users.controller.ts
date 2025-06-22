@@ -47,7 +47,7 @@ export class UsersController {
   @ApiOperation({ summary: 'Get a user by ID' })
   @ApiResponse({ status: 200, description: 'User found', type: User })
   findOne(@Param('id') id: string) {
-    return this.usersService.findOne({ where: { id } });
+    return this.usersService.findOne({ where: { id: +id } });
   }
 
   @SetMetadata('roles', [Role.Admin])
@@ -55,7 +55,7 @@ export class UsersController {
   @ApiOperation({ summary: 'Update a user' })
   @ApiResponse({ status: 200, description: 'User updated', type: User })
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(id, updateUserDto);
+    return this.usersService.update(+id, updateUserDto);
   }
 
   @SetMetadata('roles', [Role.Admin])
@@ -63,6 +63,6 @@ export class UsersController {
   @ApiOperation({ summary: 'Delete a user' })
   @ApiResponse({ status: 200, description: 'User deleted' })
   remove(@Param('id') id: string) {
-    return this.usersService.remove(id);
+    return this.usersService.remove(+id);
   }
 }

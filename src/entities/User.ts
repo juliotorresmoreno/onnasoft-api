@@ -5,20 +5,33 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   DeleteDateColumn,
+  Index,
+  OneToOne,
+  JoinColumn,
 } from 'typeorm';
+import { Media } from './Media';
 
-@Entity('users')
+@Entity({
+  name: 'users',
+  synchronize: false,
+})
 export class User {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+  @PrimaryGeneratedColumn('increment')
+  id: number;
 
-  @Column({ length: 255 })
+  @Column({ length: 255, default: '' })
   name: string;
 
   @Column({ unique: true })
   email: string;
 
-  @Column()
+  @Column({
+    type: 'varchar',
+    length: 255,
+    select: false,
+    comment: 'Hashed password for security',
+    default: '',
+  })
   password: string;
 
   @Column({ default: false })
@@ -49,6 +62,14 @@ export class User {
   @Column({ default: false })
   newsletter?: boolean;
 
+  @Column({ type: 'int', nullable: true })
+  @Index()
+  photo_id?: number;
+
+  @OneToOne(() => Media, { onDelete: 'SET NULL', onUpdate: 'CASCADE' })
+  @JoinColumn({ name: 'photo_id' })
+  photo?: Media;
+
   @Column({
     type: 'enum',
     enum: ['free', 'basic', 'pro', 'premium'],
@@ -56,12 +77,29 @@ export class User {
   })
   plan: string;
 
-  @CreateDateColumn()
-  createdAt: Date;
+  @Column({ type: 'varchar', nullable: true })
+  position?: string;
 
-  @UpdateDateColumn()
-  updatedAt: Date;
+  @Column({ type: 'varchar', nullable: true })
+  linked_in?: string;
+
+  @Column({ type: 'varchar', nullable: true })
+  github?: string;
+
+  @Column({ type: 'varchar', nullable: true })
+  website?: string;
+
+  @Column({ type: 'varchar', nullable: true })
+  bio?: string;
+
+  @CreateDateColumn({ type: 'timestamptz', precision: 3 })
+  @Index()
+  created_at: Date;
+
+  @UpdateDateColumn({ type: 'timestamptz', precision: 3 })
+  @Index()
+  updated_at: Date;
 
   @DeleteDateColumn()
-  deletedAt: Date | null;
+  deleted_at: Date | null;
 }

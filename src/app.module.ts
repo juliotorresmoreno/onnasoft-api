@@ -23,6 +23,16 @@ import { NotificationsModule } from './resources/notifications/notifications.mod
 import { StripeModule } from './resources/stripe/stripe.module';
 import { User } from './entities/User';
 import { Notification } from './entities/Notification';
+import { CategoriesModule } from './resources/categories/categories.module';
+import { CategoryTranslationsModule } from './resources/category-translations/category-translations.module';
+import { PostTranslationsModule } from './resources/post-translations/post-translations.module';
+import { PostsModule } from './resources/posts/posts.module';
+import { NewsletterSubscribersModule } from './resources/newsletter-subscribers/newsletter-subscribers.module';
+import { Category } from './entities/Category';
+import { CategoryTranslation } from './entities/CategoryTranslation';
+import { PostTranslation } from './entities/PostTranslations';
+import { Post } from './entities/Post';
+import { Media } from './entities/Media';
 
 const envPath = `.env.${process.env.NODE_ENV ?? 'development'}`;
 const envFileExists = fs.existsSync(envPath);
@@ -41,8 +51,15 @@ const envFileExists = fs.existsSync(envPath);
         const configuration = configService.get('config') as Configuration;
         return {
           ...configuration.database,
-          entities: [User, Notification],
-          synchronize: true,
+          entities: [
+            User,
+            Notification,
+            Category,
+            CategoryTranslation,
+            Post,
+            PostTranslation,
+            Media,
+          ],
         } as TypeOrmModuleOptions;
       },
       inject: [NestConfigService],
@@ -73,6 +90,11 @@ const envFileExists = fs.existsSync(envPath);
     AccountModule,
     NotificationsModule,
     StripeModule,
+    CategoriesModule,
+    CategoryTranslationsModule,
+    NewsletterSubscribersModule,
+    PostTranslationsModule,
+    PostsModule,
   ],
   controllers: [AppController],
   providers: [AppService, EmailService],
