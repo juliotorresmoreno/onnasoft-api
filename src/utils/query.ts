@@ -4,7 +4,6 @@ import {
   IsOptional,
   IsObject,
   ValidateNested,
-  IsArray,
 } from 'class-validator';
 import {
   FindManyOptions,
@@ -25,9 +24,9 @@ import {
 
 export class QueryParams<T> {
   @IsOptional()
-  @IsArray()
+  @IsObject()
   @ValidateNested()
-  @Type(() => String)
+  @Type(() => Object)
   select?: FindOptionsSelect<T>;
 
   @IsOptional()
@@ -80,37 +79,49 @@ const inferValue = (value: string): any => {
   return value;
 };
 
+function handleWhereKey(key: string, value: any, where: Record<string, any>) {
+  const regex = /where\[(\w+)\](?:\[(\w+)\])?/;
+  const path = regex.exec(key);
+  if (!path) return;
+
+  const [, field, op] = path;
+  const raw = value;
+  const inferredValue = inferValue(raw);
+
+  if (op && operatorMap[op]) {
+    where[field] = operatorMap[op](raw);
+  } else {
+    where[field] = inferredValue;
+  }
+}
+
+function handleSelectKey(
+  key: string,
+  value: any,
+  options: FindManyOptions<any>,
+) {
+  const field = key.slice(7, -1); // Remove 'select[' and ']'
+  if (!options.select) {
+    options.select = {};
+  }
+  if (value === 'true') {
+    options.select[field] = true;
+  }
+}
+
 export function buildFindManyOptions<T>(
   query: Record<string, any>,
 ): FindManyOptions<T> {
   const options: FindManyOptions<T> = {};
   const where: Record<string, any> = {};
 
-  for (const key in query) {
+  Object.keys(query).forEach((key) => {
     if (key.startsWith('where[')) {
-      const regex = /where\[(\w+)\](?:\[(\w+)\])?/;
-      const path = regex.exec(key);
-      if (!path) continue;
-
-      const [, field, op] = path;
-      const raw = query[key];
-      const value = inferValue(raw);
-
-      if (op && operatorMap[op]) {
-        where[field] = operatorMap[op](raw);
-      } else {
-        where[field] = value;
-      }
+      handleWhereKey(key, query[key], where);
     } else if (key.startsWith('select[')) {
-      const field = key.slice(7, -1); // Remove 'select[' and ']'
-      if (!options.select) {
-        options.select = {};
-      }
-      if (query[key] === 'true') {
-        options.select[field] = true;
-      }
+      handleSelectKey(key, query[key], options);
     }
-  }
+  });
 
   if (Object.keys(where).length > 0) {
     options.where = where;
