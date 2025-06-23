@@ -1,4 +1,4 @@
-import { CategoryTranslation } from '@/entities/CategoryTranslation';
+import { Media } from '@/entities/Media';
 import { Configuration } from '@/types/configuration';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -6,20 +6,20 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { FindManyOptions, Repository } from 'typeorm';
 
 @Injectable()
-export class CategoryTranslationsService {
+export class MediaService {
   private readonly defaultLimit: number;
 
   constructor(
     private readonly configService: ConfigService,
-    @InjectRepository(CategoryTranslation)
-    private readonly categoryTranslationsRepository: Repository<CategoryTranslation>,
+    @InjectRepository(Media)
+    private readonly categoriesRepository: Repository<Media>,
   ) {
     this.defaultLimit =
       this.configService.get<Configuration>('config')?.defaultLimit ?? 10;
   }
 
-  async findAll(options?: FindManyOptions<CategoryTranslation>) {
-    let buildOptions: FindManyOptions<CategoryTranslation> | undefined = {
+  async findAll(options?: FindManyOptions<Media>) {
+    let buildOptions: FindManyOptions<Media> | undefined = {
       where: {},
       order: { created_at: 'DESC' },
       take: this.defaultLimit,
@@ -31,15 +31,10 @@ export class CategoryTranslationsService {
       };
     }
     const [data, count] =
-      await this.categoryTranslationsRepository.findAndCount(buildOptions);
+      await this.categoriesRepository.findAndCount(buildOptions);
 
     return {
-      docs: data.map((item) => {
-        return {
-          ...item,
-          post_count: 10,
-        };
-      }),
+      docs: data,
       hasNextPage:
         count >
         (buildOptions.skip || 0) + (buildOptions.take || this.defaultLimit),
@@ -72,7 +67,7 @@ export class CategoryTranslationsService {
   }
 
   findOne(id: number) {
-    return this.categoryTranslationsRepository.findOne({
+    return this.categoriesRepository.findOne({
       where: { id },
     });
   }

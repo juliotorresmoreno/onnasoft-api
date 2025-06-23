@@ -9,6 +9,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { Post } from './Post';
+import { CategoryTranslation } from './CategoryTranslation';
 
 @Entity({ name: 'categories' })
 export class Category {
@@ -27,6 +28,12 @@ export class Category {
 
   @OneToMany(() => Post, (post) => post.category)
   posts: Post[];
+
+  @Column({ type: 'int', default: 0, nullable: true })
+  post_count?: number;
+
+  @OneToMany(() => CategoryTranslation, (translation) => translation.category)
+  translations?: CategoryTranslation[];
 
   @CreateDateColumn({ type: 'timestamptz', precision: 3 })
   @Index()

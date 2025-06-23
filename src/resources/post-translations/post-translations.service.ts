@@ -12,7 +12,7 @@ export class PostTranslationsService {
   constructor(
     private readonly configService: ConfigService,
     @InjectRepository(PostTranslation)
-    private readonly categoriesRepository: Repository<PostTranslation>,
+    private readonly postTranslationsRepository: Repository<PostTranslation>,
   ) {
     this.defaultLimit =
       this.configService.get<Configuration>('config')?.defaultLimit ?? 10;
@@ -31,25 +31,44 @@ export class PostTranslationsService {
       };
     }
     const [data, count] =
-      await this.categoriesRepository.findAndCount(buildOptions);
+      await this.postTranslationsRepository.findAndCount(buildOptions);
 
     return {
-      data: await Promise.all(
-        data.map(async (category) => {
-          return {
-            ...category,
-            postCount: 0,
-          };
-        }),
+      docs: data,
+
+      hasNextPage:
+        count >
+        (buildOptions.skip || 0) + (buildOptions.take || this.defaultLimit),
+      hasPrevPage: (buildOptions.skip || 0) > 0,
+      limit: buildOptions.take || this.defaultLimit,
+      nextPage:
+        count >
+        (buildOptions.skip || 0) + (buildOptions.take || this.defaultLimit)
+          ? (buildOptions.skip || 0) +
+            ((buildOptions.skip || 0) +
+              (buildOptions.take || this.defaultLimit)) /
+              (buildOptions.take || this.defaultLimit)
+          : null,
+      page: Math.floor(
+        ((buildOptions.skip || 0) + (buildOptions.take || this.defaultLimit)) /
+          (buildOptions.take || this.defaultLimit),
       ),
-      total: count,
-      skip: buildOptions.skip || 0,
-      take: buildOptions.take || this.defaultLimit,
+      pagingCounter: (buildOptions.skip || 0) + 1,
+      prevPage:
+        (buildOptions.skip || 0) > 0
+          ? Math.floor(
+              ((buildOptions.skip || 0) -
+                (buildOptions.take || this.defaultLimit)) /
+                (buildOptions.take || this.defaultLimit),
+            )
+          : null,
+      totalDocs: count,
+      totalPages: Math.ceil(count / (buildOptions.take || this.defaultLimit)),
     };
   }
 
   findOne(id: number) {
-    return this.categoriesRepository.findOne({
+    return this.postTranslationsRepository.findOne({
       where: { id },
     });
   }

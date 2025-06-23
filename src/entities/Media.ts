@@ -16,12 +16,6 @@ export class Media {
   @Column({ type: 'varchar', nullable: false })
   alt: string;
 
-  @Column({ type: 'varchar', nullable: true })
-  url?: string;
-
-  @Column({ type: 'varchar', nullable: true })
-  thumbnail_u_r_l?: string;
-
   @Index({ unique: true })
   @Column({ type: 'varchar', nullable: true })
   filename?: string;
@@ -37,12 +31,6 @@ export class Media {
 
   @Column({ type: 'numeric', nullable: true })
   height?: number;
-
-  @Column({ type: 'numeric', nullable: true })
-  focal_x?: number;
-
-  @Column({ type: 'numeric', nullable: true })
-  focal_y?: number;
 
   @CreateDateColumn({ type: 'timestamptz', precision: 3 })
   @Index()

@@ -33,6 +33,7 @@ import { CategoryTranslation } from './entities/CategoryTranslation';
 import { PostTranslation } from './entities/PostTranslations';
 import { Post } from './entities/Post';
 import { Media } from './entities/Media';
+import { MediaModule } from './resources/media/media.module';
 
 const envPath = `.env.${process.env.NODE_ENV ?? 'development'}`;
 const envFileExists = fs.existsSync(envPath);
@@ -95,6 +96,7 @@ const envFileExists = fs.existsSync(envPath);
     NewsletterSubscribersModule,
     PostTranslationsModule,
     PostsModule,
+    MediaModule,
   ],
   controllers: [AppController],
   providers: [AppService, EmailService],

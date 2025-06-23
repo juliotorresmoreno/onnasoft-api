@@ -40,6 +40,12 @@ export class QueryParams<T> {
   @IsObject()
   @ValidateNested()
   @Type(() => Object)
+  relations?: Record<string, boolean>;
+
+  @IsOptional()
+  @IsObject()
+  @ValidateNested()
+  @Type(() => Object)
   order?: FindOptionsOrder<T>;
 
   @IsOptional()
@@ -134,15 +140,28 @@ export function buildFindManyOptions<T>(
     options.where = where;
   }
 
+  if (options.select) {
+    handleSelectKey('id', true, options);
+  }
+
   if (query.order) {
     options.order = query.order;
+  }
+
+  options.relations = [];
+  if (query.relations) {
+    const relations = query.relations.split(',').map((r: string) => r.trim());
+    options.relations = relations;
   }
 
   if (query.skip !== undefined) {
     options.skip = Number(query.skip);
   }
 
-  options.take = query.take !== undefined ? Number(query.take) : 10;
+  options.take =
+    (query.limit ?? query.take !== undefined)
+      ? Number(query.limit ?? query.take)
+      : 10;
 
   return options;
 }
