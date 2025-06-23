@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PostTranslation } from '@/entities/PostTranslations';
-import { FindManyOptions, IsNull, Repository } from 'typeorm';
+import { FindManyOptions, Repository } from 'typeorm';
 import { Configuration } from '@/types/configuration';
 
 @Injectable()
@@ -20,7 +20,7 @@ export class PostTranslationsService {
 
   async findAll(options?: FindManyOptions<PostTranslation>) {
     let buildOptions: FindManyOptions<PostTranslation> | undefined = {
-      where: { deleted_at: IsNull() },
+      where: {},
       order: { created_at: 'DESC' },
       take: this.defaultLimit,
     };
@@ -28,10 +28,6 @@ export class PostTranslationsService {
       buildOptions = {
         ...buildOptions,
         ...options,
-        select: options.select || buildOptions.select,
-        order: options.order || buildOptions.order,
-        take: options.take || buildOptions.take,
-        where: { ...options.where, deleted_at: IsNull() },
       };
     }
     const [data, count] =
@@ -54,7 +50,7 @@ export class PostTranslationsService {
 
   findOne(id: number) {
     return this.categoriesRepository.findOne({
-      where: { id, deleted_at: IsNull() },
+      where: { id },
     });
   }
 }

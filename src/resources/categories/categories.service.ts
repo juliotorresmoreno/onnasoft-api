@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { FindManyOptions, IsNull, Repository } from 'typeorm';
+import { FindManyOptions, Repository } from 'typeorm';
 import { Category } from '@/entities/Category';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -20,7 +20,7 @@ export class CategoriesService {
 
   async findAll(options?: FindManyOptions<Category>) {
     let buildOptions: FindManyOptions<Category> | undefined = {
-      where: { deleted_at: IsNull() },
+      where: {},
       order: { created_at: 'DESC' },
       take: this.defaultLimit,
     };
@@ -28,10 +28,6 @@ export class CategoriesService {
       buildOptions = {
         ...buildOptions,
         ...options,
-        select: options.select || buildOptions.select,
-        order: options.order || buildOptions.order,
-        take: options.take || buildOptions.take,
-        where: { ...options.where, deleted_at: IsNull() },
       };
     }
     const [data, count] =
@@ -54,7 +50,7 @@ export class CategoriesService {
 
   findOne(id: number) {
     return this.categoriesRepository.findOne({
-      where: { id, deleted_at: IsNull() },
+      where: { id },
     });
   }
 }
