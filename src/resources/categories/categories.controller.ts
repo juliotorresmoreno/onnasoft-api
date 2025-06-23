@@ -12,14 +12,18 @@ export class CategoriesController {
   @Get()
   async findAll(@Query() query: QueryParams<Category>) {
     const options = buildFindManyOptions(query);
-    const locale = query.locale || 'en';
-    options.relations = ['translations'];
-    options.where = {
-      ...options.where,
-      translations: {
-        locale,
-      },
-    };
+    const locale = query.locale;
+    options.relations = options.relations ?? {};
+    const relations = (options.relations as string[]) || [];
+    if (locale) {
+      relations.push('translations');
+      options.where = {
+        ...options.where,
+        translations: {
+          locale,
+        },
+      };
+    }
     return this.categoriesService.findAll(options);
   }
 
