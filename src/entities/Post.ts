@@ -77,10 +77,10 @@ export class Post {
   @Column({ type: 'timestamptz', precision: 3, nullable: true })
   published_date?: Date;
 
-  @Column({ type: 'numeric', default: 0, nullable: true })
+  @Column({ type: 'int', default: 0, nullable: true })
   views?: number;
 
-  @Column({ type: 'numeric', default: 0, nullable: true })
+  @Column({ type: 'int', default: 0, nullable: true })
   likes?: number;
 
   @CreateDateColumn({ type: 'timestamptz', precision: 3 })

@@ -4,6 +4,7 @@ import {
   IsOptional,
   IsObject,
   ValidateNested,
+  IsString,
 } from 'class-validator';
 import {
   FindManyOptions,
@@ -52,6 +53,12 @@ export class QueryParams<T> {
   @ValidateNested()
   @Type(() => Number)
   take?: number;
+
+  @IsOptional()
+  @IsString()
+  @ValidateNested()
+  @Type(() => String)
+  locale?: string;
 }
 
 const operatorMap: Record<string, (val: any) => FindOperator<any>> = {

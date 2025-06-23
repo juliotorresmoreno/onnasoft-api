@@ -12,6 +12,14 @@ export class PostsController {
   @Get()
   async findAll(@Query() query: QueryParams<PostTranslation>) {
     const options = buildFindManyOptions(query);
+    const locale = query.locale || 'en';
+    options.relations = ['translations'];
+    options.where = {
+      ...options.where,
+      translations: {
+        locale,
+      },
+    };
     return this.postsService.findAll(options);
   }
 

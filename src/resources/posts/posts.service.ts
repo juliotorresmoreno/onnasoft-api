@@ -23,6 +23,7 @@ export class PostsService {
       where: {},
       order: { created_at: 'DESC' },
       take: this.defaultLimit,
+      relations: ['translations'],
     };
     if (options) {
       buildOptions = {
