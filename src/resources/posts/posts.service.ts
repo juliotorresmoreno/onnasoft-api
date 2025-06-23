@@ -1,26 +1,60 @@
+import { Post } from '@/entities/Post';
+import { Configuration } from '@/types/configuration';
 import { Injectable } from '@nestjs/common';
-import { CreatePostDto } from './dto/create-post.dto';
-import { UpdatePostDto } from './dto/update-post.dto';
+import { ConfigService } from '@nestjs/config';
+import { InjectRepository } from '@nestjs/typeorm';
+import { FindManyOptions, IsNull, Repository } from 'typeorm';
 
 @Injectable()
 export class PostsService {
-  create(createPostDto: CreatePostDto) {
-    return 'This action adds a new post';
+  private readonly defaultLimit: number;
+
+  constructor(
+    private readonly configService: ConfigService,
+    @InjectRepository(Post)
+    private readonly categoriesRepository: Repository<Post>,
+  ) {
+    this.defaultLimit =
+      this.configService.get<Configuration>('config')?.defaultLimit ?? 10;
   }
 
-  findAll() {
-    return `This action returns all posts`;
+  async findAll(options?: FindManyOptions<Post>) {
+    let buildOptions: FindManyOptions<Post> | undefined = {
+      where: { deleted_at: IsNull() },
+      order: { created_at: 'DESC' },
+      take: this.defaultLimit,
+    };
+    if (options) {
+      buildOptions = {
+        ...buildOptions,
+        ...options,
+        select: options.select || buildOptions.select,
+        order: options.order || buildOptions.order,
+        take: options.take || buildOptions.take,
+        where: { ...options.where, deleted_at: IsNull() },
+      };
+    }
+    const [data, count] =
+      await this.categoriesRepository.findAndCount(buildOptions);
+
+    return {
+      data: await Promise.all(
+        data.map(async (category) => {
+          return {
+            ...category,
+            postCount: 0,
+          };
+        }),
+      ),
+      total: count,
+      skip: buildOptions.skip || 0,
+      take: buildOptions.take || this.defaultLimit,
+    };
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} post`;
-  }
-
-  update(id: number, updatePostDto: UpdatePostDto) {
-    return `This action updates a #${id} post`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} post`;
+    return this.categoriesRepository.findOne({
+      where: { id, deleted_at: IsNull() },
+    });
   }
 }

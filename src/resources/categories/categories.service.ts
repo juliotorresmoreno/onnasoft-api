@@ -53,10 +53,8 @@ export class CategoriesService {
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} category`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} category`;
+    return this.categoriesRepository.findOne({
+      where: { id, deleted_at: IsNull() },
+    });
   }
 }

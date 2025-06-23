@@ -8,7 +8,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity({ name: 'media', synchronize: false })
+@Entity({ name: 'media' })
 export class Media {
   @PrimaryGeneratedColumn('increment')
   id: number;

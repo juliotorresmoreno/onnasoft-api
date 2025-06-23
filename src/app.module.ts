@@ -54,11 +54,11 @@ const envFileExists = fs.existsSync(envPath);
           entities: [
             User,
             Notification,
+            Post,
+            Media,
             Category,
             CategoryTranslation,
-            Post,
             PostTranslation,
-            Media,
           ],
         } as TypeOrmModuleOptions;
       },

@@ -58,7 +58,7 @@ export class Post {
 
   @ManyToOne(() => Media, { onDelete: 'SET NULL', onUpdate: 'CASCADE' })
   @JoinColumn({ name: 'cover_thumbnail_id' })
-  coverThumbnail?: Media;
+  cover_thumbnail?: Media;
 
   @Column({ type: 'int', nullable: true })
   @Index()
@@ -66,7 +66,7 @@ export class Post {
 
   @ManyToOne(() => Media, { onDelete: 'SET NULL', onUpdate: 'CASCADE' })
   @JoinColumn({ name: 'cover_image_id' })
-  coverImage?: Media;
+  cover_image?: Media;
 
   @OneToMany(() => PostTranslation, (translation) => translation.post)
   translations: PostTranslation[];
@@ -75,7 +75,7 @@ export class Post {
   published?: boolean;
 
   @Column({ type: 'timestamptz', precision: 3, nullable: true })
-  publishedDate?: Date;
+  published_date?: Date;
 
   @Column({ type: 'numeric', default: 0, nullable: true })
   views?: number;

@@ -11,10 +11,7 @@ import {
 } from 'typeorm';
 import { Media } from './Media';
 
-@Entity({
-  name: 'users',
-  synchronize: false,
-})
+@Entity({ name: 'users' })
 export class User {
   @PrimaryGeneratedColumn('increment')
   id: number;

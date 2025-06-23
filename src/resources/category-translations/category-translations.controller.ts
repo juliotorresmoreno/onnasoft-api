@@ -1,34 +1,25 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { CategoryTranslationsService } from './category-translations.service';
-import { CreateCategoryTranslationDto } from './dto/create-category-translation.dto';
-import { UpdateCategoryTranslationDto } from './dto/update-category-translation.dto';
+import { buildFindManyOptions, QueryParams } from '@/utils/query';
+import { Category } from '@/entities/Category';
+import { Public } from '@/utils/secure';
 
 @Controller('category-translations')
 export class CategoryTranslationsController {
-  constructor(private readonly categoryTranslationsService: CategoryTranslationsService) {}
+  constructor(
+    private readonly categoryTranslationsService: CategoryTranslationsService,
+  ) {}
 
-  @Post()
-  create(@Body() createCategoryTranslationDto: CreateCategoryTranslationDto) {
-    return this.categoryTranslationsService.create(createCategoryTranslationDto);
-  }
-
+  @Public()
   @Get()
-  findAll() {
-    return this.categoryTranslationsService.findAll();
+  async findAll(@Query() query: QueryParams<Category>) {
+    const options = buildFindManyOptions(query);
+    return this.categoryTranslationsService.findAll(options);
   }
 
+  @Public()
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.categoryTranslationsService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCategoryTranslationDto: UpdateCategoryTranslationDto) {
-    return this.categoryTranslationsService.update(+id, updateCategoryTranslationDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.categoryTranslationsService.remove(+id);
   }
 }
