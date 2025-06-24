@@ -8,5 +8,6 @@ import { PostTranslation } from '@/entities/PostTranslations';
   controllers: [PostTranslationsController],
   providers: [PostTranslationsService],
   imports: [TypeOrmModule.forFeature([PostTranslation])],
+  exports: [PostTranslationsService],
 })
 export class PostTranslationsModule {}

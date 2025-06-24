@@ -113,12 +113,12 @@ function handleSelectKey(
   value: any,
   options: FindManyOptions<any>,
 ) {
-  const field = key.slice(7, -1); // Remove 'select[' and ']'
-  if (!options.select) {
-    options.select = {};
+  const field = key.slice(7, -1);
+  if (!Array.isArray(options.select)) {
+    options.select = ['id', 'created_at', 'updated_at'];
   }
-  if (value === 'true') {
-    options.select[field] = true;
+  if (value === 'true' && Array.isArray(options.select)) {
+    options.select.push(field);
   }
 }
 
@@ -135,6 +135,7 @@ export function buildFindManyOptions<T>(
       handleSelectKey(key, query[key], options);
     }
   });
+  console.log('Query:', options.select);
 
   if (Object.keys(where).length > 0) {
     options.where = where;

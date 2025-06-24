@@ -9,6 +9,16 @@ export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
   @Public()
+  @Get('search')
+  async search(
+    @Query('q') query: string,
+    @Query('locale') locale: string = 'en',
+    @Query('limit') limit?: number,
+  ) {
+    return this.postsService.search(query, locale, limit);
+  }
+
+  @Public()
   @Get()
   async findAll(@Query() query: QueryParams<PostTranslation>) {
     const options = buildFindManyOptions(query);
