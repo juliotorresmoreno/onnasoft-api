@@ -35,6 +35,7 @@ import { Post } from './entities/Post';
 import { Media } from './entities/Media';
 import { MediaModule } from './resources/media/media.module';
 import { EmbeddingService } from './services/embedding/embedding.service';
+import { CommentsModule } from './resources/comments/comments.module';
 
 const envPath = `.env.${process.env.NODE_ENV ?? 'development'}`;
 const envFileExists = fs.existsSync(envPath);
@@ -98,6 +99,7 @@ const envFileExists = fs.existsSync(envPath);
     PostTranslationsModule,
     PostsModule,
     MediaModule,
+    CommentsModule,
   ],
   controllers: [AppController],
   providers: [AppService, EmailService, EmbeddingService],

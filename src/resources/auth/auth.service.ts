@@ -171,7 +171,7 @@ export class AuthService {
     try {
       const user = await this.usersService.findOne({
         where: { email },
-        select: ['id', 'email', 'password', 'name', 'isEmailVerified'],
+        select: ['id', 'email', 'password', 'name', 'is_email_verified'],
       });
 
       if (!user) {
@@ -183,7 +183,7 @@ export class AuthService {
         return null;
       }
 
-      if (!user.isEmailVerified) {
+      if (!user.is_email_verified) {
         throw new UnauthorizedException('Email not verified');
       }
 
@@ -239,7 +239,7 @@ export class AuthService {
       }
 
       await this.usersService.update(user.id, {
-        isEmailVerified: true,
+        is_email_verified: true,
         verificationToken: null,
         verificationTokenExpiresAt: null,
       });
@@ -278,7 +278,7 @@ export class AuthService {
         throw new UnauthorizedException('User not found');
       }
 
-      if (user.isEmailVerified) {
+      if (user.is_email_verified) {
         throw new ConflictException('Email already verified');
       }
 
@@ -349,7 +349,7 @@ export class AuthService {
       const hashedPassword = await hashPassword(newPassword);
       await this.usersService.update(user.id, {
         password: hashedPassword,
-        isEmailVerified: true,
+        is_email_verified: true,
         verificationToken: null,
         verificationTokenExpiresAt: null,
         passwordResetToken: null,
@@ -386,25 +386,52 @@ export class AuthService {
     }
   }
 
-  login(user: User) {
+  async login(user: User) {
     const payload = { email: user.email, sub: user.id, role: Role.User };
 
     const access_token = this.jwtService.sign(payload, {
-      expiresIn: '1h',
+      expiresIn: '7d',
     });
 
     const refresh_token = this.jwtService.sign(payload, {
       expiresIn: '30d',
     });
 
-    return { access_token, refresh_token };
+    const updatedUser = await this.usersService.findOne({
+      where: { id: user.id },
+      select: [
+        'id',
+        'email',
+        'name',
+        'is_email_verified',
+        'created_at',
+        'updated_at',
+      ],
+    });
+
+    if (!updatedUser) {
+      throw new InternalServerErrorException('User not found after login');
+    }
+
+    return {
+      access_token,
+      refresh_token,
+      user: {
+        id: updatedUser.id,
+        email: updatedUser.email,
+        name: updatedUser.name,
+        is_email_verified: updatedUser.is_email_verified,
+        created_at: updatedUser.created_at,
+        updated_at: updatedUser.updated_at,
+      },
+    };
   }
 
   refreshToken(user: User) {
     const payload = { email: user.email, sub: user.id, role: Role.User };
 
     const accessToken = this.jwtService.sign(payload, {
-      expiresIn: '1h',
+      expiresIn: '7d',
     });
 
     return {
@@ -428,11 +455,46 @@ export class AuthService {
     }
   }
 
-  async loginOauthGoogle(token: string) {
-    console.log(`This method is not implemented yet: ${token}`);
-    throw new InternalServerErrorException(
-      'OAuth Google login is not implemented yet',
+  async loginOauthGoogle(accessToken: string) {
+    const res = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+
+    const user = await res.json();
+    if (!user || !user.email) {
+      throw new UnauthorizedException('Invalid Google access token');
+    }
+
+    let existingUser = await this.usersService.findOne({
+      where: { email: user.email },
+      select: ['id', 'email', 'name', 'is_email_verified'],
+    });
+
+    if (!existingUser) {
+      existingUser = await this.usersService.create({
+        email: user.email,
+        name: user.name || 'Google User',
+        password: await hashPassword(generateRandomToken()),
+        is_email_verified: true,
+      });
+    } else if (!existingUser.is_email_verified) {
+      throw new ConflictException('Email not verified');
+    }
+
+    await this.notificationsService.create(
+      new Notification({
+        title: 'OAuth Google Login',
+        userId: existingUser.id,
+        metadata: {
+          type: 'oauth_login',
+          message: `User logged in via OAuth Google with email: ${existingUser.email}`,
+        },
+      }),
     );
+
+    return this.login(existingUser);
   }
 
   async loginOAuth(token: string) {
@@ -445,7 +507,7 @@ export class AuthService {
 
       let user = await this.usersService.findOne({
         where: { email: decoded.email },
-        select: ['id', 'email', 'name', 'isEmailVerified'],
+        select: ['id', 'email', 'name', 'is_email_verified'],
       });
 
       if (!user) {
@@ -453,9 +515,9 @@ export class AuthService {
           email: decoded.email,
           name: decoded.name,
           password: await hashPassword(generateRandomToken()),
-          isEmailVerified: true,
+          is_email_verified: true,
         });
-      } else if (!user.isEmailVerified) {
+      } else if (!user.is_email_verified) {
         throw new ConflictException('Email not verified');
       }
 
@@ -470,7 +532,7 @@ export class AuthService {
         }),
       );
 
-      return this.refreshToken(user);
+      return this.login(user);
     } catch (error) {
       this.logger.error(
         `Error during OAuth login with token ${token}: ${error.message}`,

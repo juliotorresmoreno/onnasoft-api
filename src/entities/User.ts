@@ -32,7 +32,7 @@ export class User {
   password: string;
 
   @Column({ default: false })
-  isEmailVerified: boolean;
+  is_email_verified: boolean;
 
   @Column({ nullable: true, type: 'varchar' })
   verificationToken: string | null;
