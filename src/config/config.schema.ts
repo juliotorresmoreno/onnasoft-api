@@ -150,6 +150,20 @@ class EnvironmentVariables {
     message: 'STRIPE_WEBHOOK_SECRET must be at least 32 characters long',
   })
   STRIPE_WEBHOOK_SECRET: string;
+
+  @IsString()
+  @IsNotEmpty({ message: 'GOOGLE_CLIENT_ID is required' })
+  @Matches(/^[a-zA-Z0-9-_.]+\.apps\.googleusercontent\.com$/, {
+    message: 'GOOGLE_CLIENT_ID must be a valid Google Client ID',
+  })
+  GOOGLE_CLIENT_ID: string;
+
+  @IsString()
+  @IsNotEmpty({ message: 'GOOGLE_CLIENT_SECRET is required' })
+  @MinLength(32, {
+    message: 'GOOGLE_CLIENT_SECRET must be at least 32 characters long',
+  })
+  GOOGLE_CLIENT_SECRET: string;
 }
 
 export function validate(config: Record<string, unknown>) {

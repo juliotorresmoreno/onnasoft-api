@@ -111,6 +111,12 @@ export class AuthController {
   }
 
   @Public()
+  @Post('/oauth/login/google')
+  loginOAuthGoogle(@Body('token') token: string) {
+    return this.authService.loginOAuth(token);
+  }
+
+  @Public()
   @Post('/forgot-password')
   @ApiOperation({ summary: 'Request password reset' })
   @ApiResponse({

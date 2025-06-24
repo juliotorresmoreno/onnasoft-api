@@ -21,10 +21,12 @@ import { Configuration } from '@/types/configuration';
 import { Role } from '@/types/role';
 import { NotificationsService } from '../notifications/notifications.service';
 import { Notification } from '@/entities/Notification';
+import { OAuth2Client } from 'google-auth-library';
 
 @Injectable()
 export class AuthService {
   private readonly logger = new Logger(AuthService.name);
+  private readonly googleClient: OAuth2Client;
 
   constructor(
     private readonly configService: ConfigService,
@@ -32,7 +34,13 @@ export class AuthService {
     private readonly emailService: EmailService,
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
-  ) {}
+  ) {
+    const config = this.configService.get('config') as Configuration;
+    this.googleClient = new OAuth2Client(
+      config.google.clientId,
+      config.google.clientSecret,
+    );
+  }
 
   async register(registerDto: RegisterAuthDto) {
     try {
@@ -418,6 +426,13 @@ export class AuthService {
       );
       throw new UnauthorizedException('Invalid or expired token');
     }
+  }
+
+  async loginOauthGoogle(token: string) {
+    console.log(`This method is not implemented yet: ${token}`);
+    throw new InternalServerErrorException(
+      'OAuth Google login is not implemented yet',
+    );
   }
 
   async loginOAuth(token: string) {

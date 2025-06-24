@@ -34,10 +34,7 @@ export class CategoriesService {
       await this.categoriesRepository.findAndCount(buildOptions);
 
     return {
-      docs: data.map((category) => ({
-        ...category,
-        post_count: category.post_count || 10,
-      })),
+      docs: data,
       hasNextPage:
         count >
         (buildOptions.skip || 0) + (buildOptions.take || this.defaultLimit),

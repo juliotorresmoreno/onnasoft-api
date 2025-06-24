@@ -5,7 +5,6 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, FindManyOptions, In, Repository } from 'typeorm';
-import { PostTranslationsService } from '../post-translations/post-translations.service';
 
 @Injectable()
 export class PostsService {
@@ -17,7 +16,6 @@ export class PostsService {
     private readonly embeddingService: EmbeddingService,
     @InjectRepository(Post)
     private readonly postsRepository: Repository<Post>,
-    private readonly postTranslationsService: PostTranslationsService,
   ) {
     this.defaultLimit =
       this.configService.get<Configuration>('config')?.defaultLimit ?? 10;

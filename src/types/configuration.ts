@@ -22,4 +22,9 @@ export interface Configuration {
     secretKey: string;
     webhookSecret: string;
   };
+  google: {
+    clientId: string;
+    clientSecret: string;
+    redirectUri: string;
+  };
 }
