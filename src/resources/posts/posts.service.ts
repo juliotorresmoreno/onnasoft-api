@@ -24,9 +24,7 @@ export class PostsService {
   }
 
   async search(query: string, locale: string = 'en', limit?: number) {
-    console.log(`Searching for query: ${query} in locale: ${locale}`);
     if (!query) {
-      console.warn('Empty query provided, returning empty result set.');
       return [];
     }
     const embedding = await this.embeddingService.generateEmbedding(query);

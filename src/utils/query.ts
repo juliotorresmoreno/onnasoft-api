@@ -135,7 +135,6 @@ export function buildFindManyOptions<T>(
       handleSelectKey(key, query[key], options);
     }
   });
-  console.log('Query:', options.select);
 
   if (Object.keys(where).length > 0) {
     options.where = where;
