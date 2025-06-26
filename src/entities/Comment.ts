@@ -19,10 +19,10 @@ export class Comment {
   post_id: number;
 
   @Column({ type: 'int', nullable: true })
-  reply_to_id: number | null;
+  reply_to_id?: number | null;
 
   @Column({ type: 'jsonb' })
-  content: Record<string, any>;
+  value: Record<string, any>;
 
   @CreateDateColumn()
   created_at: Date;

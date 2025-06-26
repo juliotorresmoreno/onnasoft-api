@@ -4,6 +4,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '@/entities/User';
 import { FindOneOptions, Repository, IsNull, FindManyOptions } from 'typeorm';
 
+interface CreateUserOptions {
+  is_email_verified?: boolean;
+  photo_id?: number;
+}
+
 @Injectable()
 export class UsersService {
   constructor(
@@ -11,10 +16,11 @@ export class UsersService {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  create(payload: CreateUserDto & { is_email_verified?: boolean }) {
+  create(payload: CreateUserDto & CreateUserOptions) {
     return this.userRepository.save({
       ...payload,
       is_email_verified: payload.is_email_verified || false,
+      photo_id: payload.photo_id,
       createdAt: new Date(),
       updatedAt: new Date(),
     });

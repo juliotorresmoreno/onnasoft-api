@@ -31,11 +31,12 @@ import { NewsletterSubscribersModule } from './resources/newsletter-subscribers/
 import { Category } from './entities/Category';
 import { CategoryTranslation } from './entities/CategoryTranslation';
 import { PostTranslation } from './entities/PostTranslations';
-import { Post } from './entities/Post';
-import { Media } from './entities/Media';
 import { MediaModule } from './resources/media/media.module';
 import { EmbeddingService } from './services/embedding/embedding.service';
 import { CommentsModule } from './resources/comments/comments.module';
+import { Post } from './entities/Post';
+import { Media } from './entities/Media';
+import { Comment } from './entities/Comment';
 
 const envPath = `.env.${process.env.NODE_ENV ?? 'development'}`;
 const envFileExists = fs.existsSync(envPath);
@@ -62,6 +63,7 @@ const envFileExists = fs.existsSync(envPath);
             Category,
             CategoryTranslation,
             PostTranslation,
+            Comment,
           ],
         } as TypeOrmModuleOptions;
       },

@@ -10,7 +10,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { Post } from './Post';
-import { Language, languages } from '@/types/laguages';
+import { Language, languages } from '@/types/languages';
 
 @Entity({ name: 'post_translations' })
 export class PostTranslation {

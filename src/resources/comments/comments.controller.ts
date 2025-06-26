@@ -7,12 +7,14 @@ import {
   Param,
   Delete,
   SetMetadata,
+  Request,
 } from '@nestjs/common';
 import { CommentsService } from './comments.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 import { Role } from '@/types/role';
 import { Public } from '@/utils/secure';
+import { User } from '@/entities/User';
 
 @Controller('comments')
 export class CommentsController {
@@ -20,8 +22,14 @@ export class CommentsController {
 
   @SetMetadata('roles', [Role.User, Role.Admin])
   @Post()
-  create(@Body() createCommentDto: CreateCommentDto) {
-    return this.commentsService.create(createCommentDto);
+  create(
+    @Body() createCommentDto: CreateCommentDto,
+    @Request() req: Express.Request & { user: User },
+  ) {
+    return this.commentsService.create({
+      ...createCommentDto,
+      user_id: req.user.id,
+    });
   }
 
   @Public()

@@ -1,15 +1,28 @@
-import { Controller, Get, Param, Res, NotFoundException } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Param,
+  Res,
+  NotFoundException,
+  Post,
+  UseInterceptors,
+  UploadedFile,
+} from '@nestjs/common';
 import { Response } from 'express';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as mime from 'mime-types';
 import { Public } from '@/utils/secure';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { MediaService } from './media.service';
 
 @Controller('media')
 export class MediaController {
+  constructor(private readonly mediaService: MediaService) {}
+
   @Public()
   @Get('file/:filename')
-  async findOne(@Param('filename') filename: string, @Res() res: Response) {
+  async view(@Param('filename') filename: string, @Res() res: Response) {
     const filePath = path.join(process.cwd(), 'media', filename);
 
     if (!fs.existsSync(filePath)) {
@@ -23,5 +36,11 @@ export class MediaController {
 
     const stream = fs.createReadStream(filePath);
     stream.pipe(res);
+  }
+
+  @Post()
+  @UseInterceptors(FileInterceptor('file'))
+  uploadImage(@UploadedFile() file: Express.Multer.File) {
+    return this.mediaService.upload(file.buffer, file.originalname);
   }
 }

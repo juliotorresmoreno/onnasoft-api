@@ -21,26 +21,21 @@ import { Configuration } from '@/types/configuration';
 import { Role } from '@/types/role';
 import { NotificationsService } from '../notifications/notifications.service';
 import { Notification } from '@/entities/Notification';
-import { OAuth2Client } from 'google-auth-library';
+import { GoogleAuthUser } from '@/types/models';
+import { MediaService } from '../media/media.service';
 
 @Injectable()
 export class AuthService {
   private readonly logger = new Logger(AuthService.name);
-  private readonly googleClient: OAuth2Client;
 
   constructor(
     private readonly configService: ConfigService,
     private readonly notificationsService: NotificationsService,
     private readonly emailService: EmailService,
     private readonly usersService: UsersService,
+    private readonly mediaService: MediaService,
     private readonly jwtService: JwtService,
-  ) {
-    const config = this.configService.get('config') as Configuration;
-    this.googleClient = new OAuth2Client(
-      config.google.clientId,
-      config.google.clientSecret,
-    );
-  }
+  ) {}
 
   async register(registerDto: RegisterAuthDto) {
     try {
@@ -407,23 +402,27 @@ export class AuthService {
         'created_at',
         'updated_at',
       ],
+      relations: ['photo'],
     });
 
     if (!updatedUser) {
       throw new InternalServerErrorException('User not found after login');
     }
 
+    const userData = {
+      id: updatedUser.id,
+      email: updatedUser.email,
+      name: updatedUser.name,
+      is_email_verified: updatedUser.is_email_verified,
+      photo: updatedUser.photo,
+      created_at: updatedUser.created_at,
+      updated_at: updatedUser.updated_at,
+    };
+
     return {
       access_token,
       refresh_token,
-      user: {
-        id: updatedUser.id,
-        email: updatedUser.email,
-        name: updatedUser.name,
-        is_email_verified: updatedUser.is_email_verified,
-        created_at: updatedUser.created_at,
-        updated_at: updatedUser.updated_at,
-      },
+      user: userData,
     };
   }
 
@@ -462,7 +461,7 @@ export class AuthService {
       },
     });
 
-    const user = await res.json();
+    const user = (await res.json()) as GoogleAuthUser;
     if (!user || !user.email) {
       throw new UnauthorizedException('Invalid Google access token');
     }
@@ -473,14 +472,27 @@ export class AuthService {
     });
 
     if (!existingUser) {
+      const media = await this.uploadGoogleProfileImage(user);
       existingUser = await this.usersService.create({
         email: user.email,
         name: user.name || 'Google User',
         password: await hashPassword(generateRandomToken()),
         is_email_verified: true,
+        photo_id: media.id,
       });
     } else if (!existingUser.is_email_verified) {
       throw new ConflictException('Email not verified');
+    } else if (existingUser?.photo_id === null) {
+      const media = await this.uploadGoogleProfileImage(user);
+      existingUser = await this.usersService.update(existingUser.id, {
+        photo_id: media.id,
+      });
+    }
+
+    if (!existingUser) {
+      throw new InternalServerErrorException(
+        'User not found after Google OAuth login',
+      );
     }
 
     await this.notificationsService.create(
@@ -495,6 +507,24 @@ export class AuthService {
     );
 
     return this.login(existingUser);
+  }
+
+  async uploadGoogleProfileImage(user: GoogleAuthUser) {
+    const response = await fetch(
+      user.picture || 'https://www.gravatar.com/avatar/' + user.email,
+      {
+        headers: {
+          'User-Agent': 'OnnaSoft OAuth Service',
+        },
+      },
+    );
+    const arrayBuffer = await response.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+    const filename = user.picture
+      ? (user.picture.split('/').pop() ?? user.email + '.png')
+      : user.email + '.png';
+
+    return this.mediaService.upload(buffer, filename);
   }
 
   async loginOAuth(token: string) {

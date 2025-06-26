@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindManyOptions, Repository } from 'typeorm';
+import { FindManyOptions, IsNull, Repository } from 'typeorm';
 import { ConfigService } from '@nestjs/config';
 import { Configuration } from '@/types/configuration';
 import { Comment } from '@/entities/Comment';
@@ -19,7 +19,21 @@ export class CommentsService {
       this.configService.get<Configuration>('config')?.defaultLimit ?? 10;
   }
 
-  create(payload: CreateCommentDto) {
+  async create(payload: CreateCommentDto & { user_id: number }) {
+    if (payload.reply_to_id) {
+      const replyTo = await this.commentRepository.findOne({
+        where: {
+          id: payload.reply_to_id,
+          reply_to_id: IsNull(),
+        },
+        order: { created_at: 'DESC' },
+      });
+
+      if (!replyTo) {
+        payload.reply_to_id = null;
+      }
+    }
+
     return this.commentRepository.save(payload);
   }
 

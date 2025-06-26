@@ -1,9 +1,13 @@
 import { Media } from '@/entities/Media';
 import { Configuration } from '@/types/configuration';
-import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { InjectRepository } from '@nestjs/typeorm';
 import { FindManyOptions, Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import { ConfigService } from '@nestjs/config';
+import { fileTypeFromBuffer } from 'file-type';
+import { Injectable } from '@nestjs/common';
+import imageSize from 'image-size';
+import * as path from 'path';
+import * as fs from 'fs';
 
 @Injectable()
 export class MediaService {
@@ -16,6 +20,26 @@ export class MediaService {
   ) {
     this.defaultLimit =
       this.configService.get<Configuration>('config')?.defaultLimit ?? 10;
+  }
+
+  async upload(file: Buffer<ArrayBufferLike>, filename: string) {
+    const filePath = path.join(process.cwd(), 'media', filename);
+
+    // Ensure the media directory exists
+    fs.mkdirSync(path.dirname(filePath), { recursive: true });
+
+    // Write the file to the filesystem
+    fs.writeFileSync(filePath, file);
+    const dimensions = imageSize(file);
+    const fileType = await fileTypeFromBuffer(file);
+
+    return this.categoriesRepository.save({
+      filename,
+      mime_type: fileType?.mime || 'application/octet-stream',
+      filesize: file.byteLength,
+      width: dimensions.width,
+      height: dimensions.height,
+    });
   }
 
   async findAll(options?: FindManyOptions<Media>) {

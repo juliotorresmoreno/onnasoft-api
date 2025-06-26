@@ -7,12 +7,14 @@ import { LocalStrategy } from './local.strategy';
 import { JwtStrategy } from './jwt.strategy';
 import { NotificationsModule } from '../notifications/notifications.module';
 import { EmailModule } from '@/services/email/email.module';
+import { MediaModule } from '../media/media.module';
 
 @Module({
   controllers: [AuthController],
   imports: [
     UsersModule,
     EmailModule,
+    MediaModule,
     NotificationsModule,
     PassportModule.register({ defaultStrategy: 'local' }),
   ],
