@@ -34,16 +34,16 @@ export class User {
   @Column({ default: false })
   is_email_verified: boolean;
 
-  @Column({ nullable: true, type: 'varchar' })
+  @Column({ nullable: true, type: 'varchar', select: false })
   verificationToken: string | null;
 
-  @Column({ nullable: true, type: 'timestamp' })
+  @Column({ nullable: true, type: 'timestamp', select: false })
   verificationTokenExpiresAt: Date | null;
 
-  @Column({ nullable: true, type: 'varchar' })
+  @Column({ nullable: true, type: 'varchar', select: false })
   passwordResetToken: string | null;
 
-  @Column({ nullable: true, type: 'timestamp' })
+  @Column({ nullable: true, type: 'timestamp', select: false })
   passwordResetTokenExpiresAt: Date | null;
 
   @Column({

@@ -8,6 +8,7 @@ import {
   Delete,
   SetMetadata,
   Request,
+  Query,
 } from '@nestjs/common';
 import { CommentsService } from './comments.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
@@ -15,6 +16,8 @@ import { UpdateCommentDto } from './dto/update-comment.dto';
 import { Role } from '@/types/role';
 import { Public } from '@/utils/secure';
 import { User } from '@/entities/User';
+import { buildFindManyOptions, QueryParams } from '@/utils/query';
+import { Comment } from '@/entities/Comment';
 
 @Controller('comments')
 export class CommentsController {
@@ -34,8 +37,9 @@ export class CommentsController {
 
   @Public()
   @Get()
-  findAll() {
-    return this.commentsService.findAll();
+  async findAll(@Query() query: QueryParams<Comment>) {
+    const options = buildFindManyOptions(query);
+    return this.commentsService.findAll(options);
   }
 
   @Public()

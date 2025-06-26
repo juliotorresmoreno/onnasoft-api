@@ -8,7 +8,6 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './resources/auth/auth.module';
 import { UsersModule } from './resources/users/users.module';
-import configuration from './config/configuration';
 import { validate } from './config/config.schema';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { ConfigService } from '@/config/config.service';
@@ -34,9 +33,11 @@ import { PostTranslation } from './entities/PostTranslations';
 import { MediaModule } from './resources/media/media.module';
 import { EmbeddingService } from './services/embedding/embedding.service';
 import { CommentsModule } from './resources/comments/comments.module';
+import configuration from './config/configuration';
 import { Post } from './entities/Post';
 import { Media } from './entities/Media';
 import { Comment } from './entities/Comment';
+import { PostLike } from './entities/PostLike';
 
 const envPath = `.env.${process.env.NODE_ENV ?? 'development'}`;
 const envFileExists = fs.existsSync(envPath);
@@ -64,6 +65,7 @@ const envFileExists = fs.existsSync(envPath);
             CategoryTranslation,
             PostTranslation,
             Comment,
+            PostLike,
           ],
         } as TypeOrmModuleOptions;
       },

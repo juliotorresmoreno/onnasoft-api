@@ -5,7 +5,10 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   DeleteDateColumn,
+  ManyToOne,
+  JoinColumn,
 } from 'typeorm';
+import { User } from './User';
 
 @Entity('comments')
 export class Comment {
@@ -14,6 +17,10 @@ export class Comment {
 
   @Column()
   user_id: number;
+
+  @ManyToOne(() => User, { onDelete: 'SET NULL', onUpdate: 'CASCADE' })
+  @JoinColumn({ name: 'user_id' })
+  user: User;
 
   @Column()
   post_id: number;

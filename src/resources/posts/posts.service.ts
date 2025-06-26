@@ -1,4 +1,5 @@
 import { Post } from '@/entities/Post';
+import { PostLike } from '@/entities/PostLike';
 import { EmbeddingService } from '@/services/embedding/embedding.service';
 import { Configuration } from '@/types/configuration';
 import { Injectable } from '@nestjs/common';
@@ -16,6 +17,8 @@ export class PostsService {
     private readonly embeddingService: EmbeddingService,
     @InjectRepository(Post)
     private readonly postsRepository: Repository<Post>,
+    @InjectRepository(PostLike)
+    private readonly postLikesRepository: Repository<PostLike>,
   ) {
     this.defaultLimit =
       this.configService.get<Configuration>('config')?.defaultLimit ?? 10;
@@ -98,6 +101,49 @@ export class PostsService {
       totalDocs: count,
       totalPages: Math.ceil(count / (buildOptions.take || this.defaultLimit)),
     };
+  }
+
+  async view(id: number) {
+    const post = await this.postsRepository.findOneBy({ id });
+    if (!post) {
+      throw new Error('Post not found');
+    }
+
+    post.views = (post.views || 0) + 1;
+    return this.postsRepository.save(post);
+  }
+
+  async like(id: number, userId: number) {
+    const post = await this.postsRepository.findOneBy({ id });
+    if (!post) {
+      throw new Error('Post not found');
+    }
+
+    const existingLike = await this.postLikesRepository.findOne({
+      where: { post_id: id, user_id: userId },
+    });
+
+    if (existingLike) {
+      await this.postLikesRepository.remove(existingLike);
+      post.likes = (post.likes || 0) - 1;
+    } else {
+      const newLike = this.postLikesRepository.create({
+        post_id: id,
+        user_id: userId,
+      });
+      await this.postLikesRepository.save(newLike);
+      post.likes = (post.likes || 0) + 1;
+    }
+    return this.postsRepository.save(post);
+  }
+
+  async update(id: number, post: Partial<Post>) {
+    const existingPost = await this.postsRepository.findOneBy({ id });
+    if (!existingPost) {
+      throw new Error('Post not found');
+    }
+    const updatedPost = Object.assign(existingPost, post);
+    return this.postsRepository.save(updatedPost);
   }
 
   findOne(id: number) {

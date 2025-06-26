@@ -1,8 +1,21 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+  Request,
+  SetMetadata,
+} from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { Public } from '@/utils/secure';
 import { buildFindManyOptions, QueryParams } from '@/utils/query';
 import { PostTranslation } from '@/entities/PostTranslations';
+import { Role } from '@/types/role';
+import { UpdatePostDto } from './dto/update-post.dto';
+import { User } from '@/entities/User';
 
 @Controller('posts')
 export class PostsController {
@@ -22,19 +35,29 @@ export class PostsController {
   @Get()
   async findAll(@Query() query: QueryParams<PostTranslation>) {
     const options = buildFindManyOptions(query);
-    const locale = query.locale;
-    options.relations = options.relations ?? {};
-    const relations = (options.relations as string[]) || [];
-    if (locale) {
-      relations.push('translations');
-      options.where = {
-        ...options.where,
-        translations: {
-          locale,
-        },
-      };
-    }
+
     return this.postsService.findAll(options);
+  }
+
+  @SetMetadata('roles', [Role.User, Role.Admin])
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() payload: UpdatePostDto) {
+    return this.postsService.update(+id, payload);
+  }
+
+  @Public()
+  @Post(':id/view')
+  view(@Param('id') id: string) {
+    return this.postsService.view(+id);
+  }
+
+  @SetMetadata('roles', [Role.User, Role.Admin])
+  @Post(':id/like')
+  like(
+    @Param('id') id: string,
+    @Request() req: Express.Request & { user: User },
+  ) {
+    return this.postsService.like(+id, req.user.id);
   }
 
   @Public()

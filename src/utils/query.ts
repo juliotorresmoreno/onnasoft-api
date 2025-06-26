@@ -136,10 +136,6 @@ export function buildFindManyOptions<T>(
     }
   });
 
-  if (Object.keys(where).length > 0) {
-    options.where = where;
-  }
-
   if (options.select) {
     handleSelectKey('id', true, options);
   }
@@ -150,8 +146,21 @@ export function buildFindManyOptions<T>(
 
   options.relations = [];
   if (query.relations) {
-    const relations = query.relations.split(',').map((r: string) => r.trim());
+    const relations: string[] = Array.from(
+      new Set(query.relations.split(',').map((r: string) => r.trim())),
+    );
     options.relations = relations;
+  }
+  options.relations = options.relations ?? [];
+  const relations = options.relations as string[];
+  const locale = query.locale;
+  if (locale) {
+    relations.push('translations');
+    where.translations = { locale };
+  }
+
+  if (Object.keys(where).length > 0) {
+    options.where = where;
   }
 
   if (query.skip !== undefined) {
