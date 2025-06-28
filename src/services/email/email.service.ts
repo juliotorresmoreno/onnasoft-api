@@ -1,4 +1,3 @@
-// src/services/email/email.service.ts
 import { Inject, Injectable } from '@nestjs/common';
 import { createEmailStrategy } from './email-strategy.factory';
 import { EmailStrategy } from './strategies/email-strategy.interface';
@@ -6,6 +5,22 @@ import { ConfigService } from '@nestjs/config';
 import { Configuration } from '@/types/configuration';
 import Handlebars from 'handlebars';
 import * as fs from 'fs';
+
+interface SendVerificationEmailParams {
+  to: string;
+  name: string;
+  token: string;
+}
+
+interface SendPasswordResetEmailParams {
+  to: string;
+  token: string;
+}
+
+interface SendWelcomeEmailParams {
+  to: string;
+  name: string;
+}
 
 @Injectable()
 export class EmailService {
@@ -15,12 +30,13 @@ export class EmailService {
     passwordReset: Handlebars.TemplateDelegate;
     welcome: Handlebars.TemplateDelegate;
   };
+  private readonly config: Configuration;
 
   constructor(@Inject() private readonly configService: ConfigService) {
-    const config = this.configService.get('config') as Configuration;
-    this.strategy = createEmailStrategy(config.email.strategy, {
-      resendApiKey: config.email.resendApiKey,
-      fromEmail: config.email.fromEmail,
+    this.config = this.configService.get('config') as Configuration;
+    this.strategy = createEmailStrategy(this.config.email.strategy, {
+      resendApiKey: this.config.email.resendApiKey,
+      fromEmail: this.config.email.fromEmail,
     });
 
     const templates = {
@@ -49,37 +65,53 @@ export class EmailService {
   }
 
   async sendVerificationEmail(
-    to: string,
-    name: string,
-    token: string,
+    params: SendVerificationEmailParams,
   ): Promise<void> {
-    const config = this.configService.get('config') as Configuration;
-    const url = `${config.baseUrl}/verify-email?token=${token}`;
+    const { to, name, token } = params;
+    const url = `${this.config.baseUrl}/admin/verify-email?token=${token}`;
     const template = this.templates.verification;
     const html = template({
       verification_url: url,
       user_name: name,
+      user_email: to,
+      company_name: this.config.company.name,
+      company_address_street: this.config.company.addressStreet,
+      support_email: this.config.company.supportEmail,
     });
 
     await this.strategy.send(to, 'Verify your account', html);
   }
 
-  async sendPasswordResetEmail(to: string, token: string): Promise<void> {
-    const config = this.configService.get('config') as Configuration;
-    const url = `${config.baseUrl}/reset-password?token=${token}`;
+  async sendPasswordResetEmail(
+    params: SendPasswordResetEmailParams,
+  ): Promise<void> {
+    const { to, token } = params;
+    const url = `${this.config.baseUrl}/admin/reset-password?token=${token}`;
     const template = this.templates.passwordReset;
     const html = template({
       reset_url: url,
+      user_email: to,
+      company_name: this.config.company.name,
+      company_address_line1: this.config.company.addressLine1,
+      company_address_line2: this.config.company.addressLine2,
+      support_email: this.config.company.supportEmail,
     });
-
-    console.log('Sending password reset email to:', to);
 
     await this.strategy.send(to, 'Reset your password', html);
   }
 
-  async sendWelcomeEmail(to: string): Promise<void> {
+  async sendWelcomeEmail(params: SendWelcomeEmailParams): Promise<void> {
+    const { to, name } = params;
     const template = this.templates.welcome;
-    const html = template({});
+    const html = template({
+      user_name: name,
+      user_email: to,
+      dashboard_url: `${this.config.baseUrl}/admin?welcome=true&tour=enabled`,
+      profile_url: `${this.config.baseUrl}/admin/setup`,
+      help_url: `${this.config.baseUrl}/help/getting-started`,
+      community_url: `${this.config.baseUrl}/community`,
+      company_name: this.config.company.name,
+    });
 
     await this.strategy.send(to, 'Welcome!', html);
   }

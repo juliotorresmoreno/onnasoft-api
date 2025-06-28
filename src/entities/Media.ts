@@ -23,15 +23,6 @@ export class Media {
   @Column({ type: 'varchar', nullable: true })
   mime_type?: string;
 
-  @Column({ type: 'numeric', nullable: true })
-  filesize?: number;
-
-  @Column({ type: 'numeric', nullable: true })
-  width?: number;
-
-  @Column({ type: 'numeric', nullable: true })
-  height?: number;
-
   @CreateDateColumn({ type: 'timestamptz', precision: 3 })
   @Index()
   created_at: Date;

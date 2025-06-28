@@ -2,6 +2,7 @@ import { JwtService } from '@nestjs/jwt';
 import { User } from '@/entities/User';
 import {
   ConflictException,
+  HttpException,
   Injectable,
   InternalServerErrorException,
   Logger,
@@ -70,11 +71,11 @@ export class AuthService {
         }),
       );
 
-      await this.emailService.sendVerificationEmail(
-        newUser.email,
-        newUser.name,
-        passwordResetToken,
-      );
+      await this.emailService.sendVerificationEmail({
+        to: newUser.email,
+        name: newUser.name,
+        token: passwordResetToken,
+      });
 
       await this.notificationsService.create(
         new Notification({
@@ -124,10 +125,10 @@ export class AuthService {
         passwordResetTokenExpiresAt: new Date(Date.now() + 3600000),
       });
 
-      await this.emailService.sendPasswordResetEmail(
-        user.email,
-        passwordResetToken,
-      );
+      await this.emailService.sendPasswordResetEmail({
+        to: user.email,
+        token: passwordResetToken,
+      });
 
       await this.notificationsService.create(
         new Notification({
@@ -166,16 +167,23 @@ export class AuthService {
     try {
       const user = await this.usersService.findOne({
         where: { email },
-        select: ['id', 'email', 'password', 'name', 'is_email_verified'],
+        select: [
+          'id',
+          'email',
+          'password',
+          'name',
+          'is_email_verified',
+          'role',
+        ],
       });
 
       if (!user) {
-        return null;
+        throw new UnauthorizedException('Invalid credentials');
       }
 
       const isPasswordValid = await comparePassword(password, user.password);
       if (!isPasswordValid) {
-        return null;
+        throw new UnauthorizedException('Invalid credentials');
       }
 
       if (!user.is_email_verified) {
@@ -206,7 +214,7 @@ export class AuthService {
         error.stack,
       );
 
-      if (error instanceof UnauthorizedException) {
+      if (error instanceof HttpException) {
         throw error;
       }
     }
@@ -250,13 +258,16 @@ export class AuthService {
         }),
       );
 
-      await this.emailService.sendWelcomeEmail(user.email);
+      await this.emailService.sendWelcomeEmail({
+        to: user.email,
+        name: user.name,
+      });
     } catch (error) {
       this.logger.error(
         `Error during email verification with token ${token}: ${error.message}`,
       );
 
-      if (error instanceof UnauthorizedException) {
+      if (error instanceof HttpException) {
         throw error;
       }
     }
@@ -283,11 +294,11 @@ export class AuthService {
         verificationTokenExpiresAt: new Date(Date.now() + 3600000 * 24),
       });
 
-      await this.emailService.sendVerificationEmail(
-        user.email,
-        user.name,
-        verificationToken,
-      );
+      await this.emailService.sendVerificationEmail({
+        to: user.email,
+        name: user.name,
+        token: verificationToken,
+      });
 
       await this.notificationsService.create(
         new Notification({
@@ -382,6 +393,20 @@ export class AuthService {
   }
 
   async login(user: User) {
+    const updatedUser = await this.usersService.findOne({
+      where: { id: user.id },
+      select: [
+        'id',
+        'email',
+        'name',
+        'role',
+        'is_email_verified',
+        'created_at',
+        'updated_at',
+      ],
+      relations: ['photo'],
+    });
+
     const payload = { email: user.email, sub: user.id, role: Role.User };
 
     const access_token = this.jwtService.sign(payload, {
@@ -390,19 +415,6 @@ export class AuthService {
 
     const refresh_token = this.jwtService.sign(payload, {
       expiresIn: '30d',
-    });
-
-    const updatedUser = await this.usersService.findOne({
-      where: { id: user.id },
-      select: [
-        'id',
-        'email',
-        'name',
-        'is_email_verified',
-        'created_at',
-        'updated_at',
-      ],
-      relations: ['photo'],
     });
 
     if (!updatedUser) {
@@ -414,6 +426,7 @@ export class AuthService {
       email: updatedUser.email,
       name: updatedUser.name,
       is_email_verified: updatedUser.is_email_verified,
+      role: updatedUser.role,
       photo: updatedUser.photo,
       created_at: updatedUser.created_at,
       updated_at: updatedUser.updated_at,
@@ -427,7 +440,7 @@ export class AuthService {
   }
 
   refreshToken(user: User) {
-    const payload = { email: user.email, sub: user.id, role: Role.User };
+    const payload = { email: user.email, sub: user.id, role: user.role };
 
     const accessToken = this.jwtService.sign(payload, {
       expiresIn: '7d',

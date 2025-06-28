@@ -38,6 +38,7 @@ import { Post } from './entities/Post';
 import { Media } from './entities/Media';
 import { Comment } from './entities/Comment';
 import { PostLike } from './entities/PostLike';
+import { StatsModule } from './resources/stats/stats.module';
 
 const envPath = `.env.${process.env.NODE_ENV ?? 'development'}`;
 const envFileExists = fs.existsSync(envPath);
@@ -104,6 +105,7 @@ const envFileExists = fs.existsSync(envPath);
     PostsModule,
     MediaModule,
     CommentsModule,
+    StatsModule,
   ],
   controllers: [AppController],
   providers: [AppService, EmailService, EmbeddingService],

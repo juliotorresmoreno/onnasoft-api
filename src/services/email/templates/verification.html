@@ -1,449 +1,200 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="x-apple-disable-message-reformatting" />
-    <meta
-      name="format-detection"
-      content="telephone=no,address=no,email=no,date=no,url=no"
-    />
-    <title>Verify Your Pro-Meets Account</title>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Verify Your Email Address</title>
     <!--[if mso]>
-      <noscript>
+    <noscript>
         <xml>
-          <o:OfficeDocumentSettings>
-            <o:PixelsPerInch>96</o:PixelsPerInch>
-          </o:OfficeDocumentSettings>
+            <o:OfficeDocumentSettings>
+                <o:PixelsPerInch>96</o:PixelsPerInch>
+            </o:OfficeDocumentSettings>
         </xml>
-      </noscript>
+    </noscript>
     <![endif]-->
-    <style>
-      /* Reset for better compatibility */
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-
-      body {
-        font-family:
-          -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
-          sans-serif;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        margin: 0;
-        padding: 0;
-        width: 100% !important;
-        min-height: 100vh;
-        -webkit-text-size-adjust: 100%;
-        -ms-text-size-adjust: 100%;
-      }
-
-      table {
-        border-collapse: collapse;
-        mso-table-lspace: 0pt;
-        mso-table-rspace: 0pt;
-      }
-
-      /* Main container */
-      .email-wrapper {
-        width: 100%;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        padding: 40px 20px;
-        min-height: 100vh;
-      }
-
-      .email-container {
-        max-width: 600px;
-        margin: 0 auto;
-        background: #ffffff;
-        border-radius: 16px;
-        overflow: hidden;
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-      }
-
-      /* Gradient header */
-      .header {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        padding: 40px 32px;
-        text-align: center;
-        position: relative;
-      }
-
-      .header::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="20" cy="20" r="1" fill="white" opacity="0.1"/><circle cx="80" cy="40" r="1" fill="white" opacity="0.1"/><circle cx="40" cy="80" r="1" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
-        opacity: 0.3;
-      }
-
-      .logo-container {
-        position: relative;
-        z-index: 1;
-        margin-bottom: 20px;
-      }
-
-      .logo {
-        width: 60px;
-        height: 60px;
-        background: #ffffff;
-        border-radius: 12px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: 700;
-        font-size: 24px;
-        color: #667eea;
-        text-decoration: none;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        flex-direction: column;
-      }
-
-      .header-title {
-        position: relative;
-        z-index: 1;
-        color: #ffffff;
-        font-size: 28px;
-        font-weight: 700;
-        margin: 0;
-        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      }
-
-      .header-subtitle {
-        position: relative;
-        z-index: 1;
-        color: rgba(255, 255, 255, 0.9);
-        font-size: 16px;
-        margin: 8px 0 0;
-        font-weight: 400;
-      }
-
-      /* Main content */
-      .content {
-        padding: 48px 32px;
-      }
-
-      .welcome-text {
-        font-size: 18px;
-        color: #374151;
-        line-height: 1.6;
-        margin-bottom: 32px;
-        text-align: center;
-      }
-
-      .instructions {
-        font-size: 16px;
-        color: #6b7280;
-        line-height: 1.6;
-        margin-bottom: 32px;
-        text-align: center;
-      }
-
-      /* Enhanced button */
-      .button-container {
-        text-align: center;
-        margin: 40px 0;
-      }
-
-      .verify-button {
-        display: inline-block;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: #ffffff !important;
-        text-decoration: none;
-        font-weight: 600;
-        font-size: 16px;
-        padding: 16px 32px;
-        border-radius: 12px;
-        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-        transition: all 0.3s ease;
-        text-align: center;
-        min-width: 200px;
-      }
-
-      .verify-button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
-      }
-
-      /* Alternative link section */
-      .alternative-section {
-        background: #f9fafb;
-        padding: 24px;
-        border-radius: 12px;
-        margin: 32px 0;
-        border-left: 4px solid #667eea;
-      }
-
-      .alternative-title {
-        font-size: 14px;
-        font-weight: 600;
-        color: #374151;
-        margin-bottom: 8px;
-      }
-
-      .alternative-link {
-        word-break: break-all;
-        font-size: 13px;
-        color: #667eea;
-        text-decoration: none;
-        line-height: 1.5;
-      }
-
-      /* Security info */
-      .security-info {
-        background: #fef3c7;
-        border: 1px solid #fbbf24;
-        border-radius: 8px;
-        padding: 16px;
-        margin: 24px 0;
-      }
-
-      .security-icon {
-        display: inline-block;
-        width: 20px;
-        height: 20px;
-        background: #f59e0b;
-        border-radius: 50%;
-        margin-right: 8px;
-        vertical-align: middle;
-      }
-
-      .security-text {
-        font-size: 14px;
-        color: #92400e;
-        margin: 0;
-        display: inline-block;
-        vertical-align: middle;
-        width: calc(100% - 32px);
-      }
-
-      /* Enhanced footer */
-      .footer {
-        background: #f9fafb;
-        padding: 32px;
-        text-align: center;
-        border-top: 1px solid #e5e7eb;
-      }
-
-      .footer-text {
-        font-size: 14px;
-        color: #6b7280;
-        margin-bottom: 16px;
-      }
-
-      .footer-links {
-        margin-bottom: 16px;
-      }
-
-      .footer-link {
-        color: #667eea;
-        text-decoration: none;
-        font-size: 14px;
-        margin: 0 8px;
-      }
-
-      .footer-link:hover {
-        text-decoration: underline;
-      }
-
-      .company-info {
-        font-size: 12px;
-        color: #9ca3af;
-        margin-top: 16px;
-      }
-
-      /* Responsive design */
-      @media only screen and (max-width: 600px) {
-        .email-wrapper {
-          padding: 20px 16px;
-        }
-
-        .email-container {
-          border-radius: 12px;
-        }
-
-        .header {
-          padding: 32px 24px;
-        }
-
-        .header-title {
-          font-size: 24px;
-        }
-
-        .content {
-          padding: 32px 24px;
-        }
-
-        .footer {
-          padding: 24px;
-        }
-
-        .verify-button {
-          width: 100%;
-          max-width: 280px;
-        }
-      }
-
-      @media only screen and (max-width: 480px) {
-        .welcome-text {
-          font-size: 16px;
-        }
-
-        .instructions {
-          font-size: 15px;
-        }
-
-        .alternative-section {
-          padding: 20px;
-        }
-      }
-
-      /* Dark mode support */
-      @media (prefers-color-scheme: dark) {
-        .email-container {
-          background: #1f2937;
-        }
-
-        .content {
-          background: #1f2937;
-        }
-
-        .welcome-text {
-          color: #e5e7eb;
-        }
-
-        .instructions {
-          color: #d1d5db;
-        }
-
-        .alternative-section {
-          background: #374151;
-        }
-
-        .alternative-title {
-          color: #e5e7eb;
-        }
-
-        .footer {
-          background: #374151;
-          border-top-color: #4b5563;
-        }
-
-        .footer-text {
-          color: #d1d5db;
-        }
-
-        .company-info {
-          color: #9ca3af;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <div class="email-wrapper">
-      <div class="email-container">
-        <!-- Header -->
-        <div class="header">
-          <div class="logo-container">
-            <div
-              class="logo"
-              style="
-                flex-direction: column !important;
-                justify-content: center !important;
-              "
-            >
-              <table
-                height="100%"
-                style="font-size: 24px; width: 100%; border: none"
-              >
-                <tr>
-                  <th align="center" valign="middle">PM</th>
-                </tr>
-              </table>
-            </div>
-          </div>
-          <h1 class="header-title">Welcome to Pro-Meets, {{user_name}}!</h1>
-          <p class="header-subtitle">Just one step to activate your account</p>
-        </div>
-
-        <!-- Main content -->
-        <div class="content">
-          <p class="welcome-text">
-            <strong>Hello {{user_name}},</strong> Thank you for joining our
-            professional community.
-          </p>
-
-          <p class="instructions">
-            To start enjoying all Pro-Meets features and connect with other
-            professionals, we need to verify your email address.
-          </p>
-
-          <div class="button-container">
-            <a href="{{verification_url}}" class="verify-button">
-              ✓ Verify My Account
-            </a>
-          </div>
-
-          <div class="security-info">
-            <span class="security-icon"></span>
-            <p class="security-text">
-              <strong>Security Notice:</strong> This verification link will
-              expire in 24 hours for your protection.
-            </p>
-          </div>
-
-          <div class="alternative-section">
-            <p class="alternative-title">Having trouble with the button?</p>
-            <p style="font-size: 14px; color: #6b7280; margin-bottom: 8px">
-              Copy and paste this link into your browser:
-            </p>
-            <a href="{{verification_url}}" class="alternative-link"
-              >{{verification_url}}</a
-            >
-          </div>
-
-          <p
-            style="
-              font-size: 14px;
-              color: #6b7280;
-              text-align: center;
-              margin: 24px 0 0;
-            "
-          >
-            If you didn't create a Pro-Meets account, you can safely ignore this
-            email. No action will be taken on your behalf.
-          </p>
-        </div>
-
-        <!-- Footer -->
-        <div class="footer">
-          <p class="footer-text">
-            <strong>Pro-Meets</strong> - Connecting exceptional professionals
-          </p>
-
-          <div class="footer-links">
-            <a href="https://pro-meets.com/help" class="footer-link"
-              >Help Center</a
-            >
-            <a href="https://pro-meets.com/privacy" class="footer-link"
-              >Privacy</a
-            >
-            <a href="https://pro-meets.com/terms" class="footer-link"
-              >Terms of Service</a
-            >
-          </div>
-
-          <p class="company-info">
-            © 2024 Pro-Meets. All rights reserved.<br />
-            This email was sent to {{user_email}} because you created an account
-            with Pro-Meets.
-          </p>
-        </div>
-      </div>
+</head>
+<body style="margin: 0; padding: 0; background-color: #f8fafc; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;">
+    <!-- Email Container -->
+    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: #f8fafc;">
+        <tr>
+            <td align="center" style="padding: 40px 20px;">
+                <!-- Main Email Content -->
+                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="600" style="max-width: 600px; background-color: #ffffff; border-radius: 12px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);">
+                    
+                    <!-- Header -->
+                    <tr>
+                        <td style="padding: 40px 40px 0 40px; text-align: center;">
+                            <!-- Logo/Brand -->
+                            <div style="margin-bottom: 32px;">
+                                <div style="display: inline-block; width: 64px; height: 64px; background-color: #ec4899; border-radius: 12px; position: relative;">
+                                    <!-- Mail Check Icon SVG -->
+                                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+                                        <path d="M4 4H20C21.1 4 22 4.9 22 6V18C22 19.1 21.1 20 20 20H4C2.9 20 2 19.1 2 18V6C2 4.9 2.9 4 4 4Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <polyline points="22,6 12,13 2,6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <path d="M9 11L11 13L15 9" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </div>
+                            </div>
+                            
+                            <!-- Welcome Message -->
+                            <h1 style="margin: 0 0 8px 0; font-size: 28px; font-weight: 700; color: #1f2937; line-height: 1.2;">
+                                Welcome{{#if user_name}}, {{user_name}}{{/if}}! 🎉
+                            </h1>
+                            
+                            <!-- Subtitle -->
+                            <p style="margin: 0 0 32px 0; font-size: 16px; color: #6b7280; line-height: 1.5;">
+                                Thanks for joining us! Please verify your email address to complete your account setup and unlock all features.
+                            </p>
+                        </td>
+                    </tr>
+                    
+                    <!-- Main Content -->
+                    <tr>
+                        <td style="padding: 0 40px;">
+                            <!-- Verification Button -->
+                            <div style="text-align: center; margin-bottom: 32px;">
+                                <a href="{{verification_url}}" style="display: inline-block; padding: 16px 32px; background-color: #ec4899; color: #ffffff; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px; line-height: 1.5; transition: background-color 0.2s;">
+                                    Verify My Email Address
+                                </a>
+                            </div>
+                            
+                            <!-- Benefits Section -->
+                            <div style="background-color: #fdf2f8; border: 1px solid #f9a8d4; border-radius: 8px; padding: 24px; margin-bottom: 32px;">
+                                <p style="margin: 0 0 16px 0; font-size: 14px; font-weight: 600; color: #be185d;">
+                                    ✨ What you'll get after verification:
+                                </p>
+                                <ul style="margin: 0; padding-left: 20px; font-size: 14px; color: #be185d; line-height: 1.6;">
+                                    <li style="margin-bottom: 8px;">Full access to your dashboard and all features</li>
+                                    <li style="margin-bottom: 8px;">Important security and account notifications</li>
+                                    <li style="margin-bottom: 8px;">Product updates and exclusive content</li>
+                                    <li>Priority customer support</li>
+                                </ul>
+                            </div>
+                            
+                            <!-- Alternative Link -->
+                            <div style="background-color: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 24px; margin-bottom: 32px;">
+                                <p style="margin: 0 0 12px 0; font-size: 14px; font-weight: 600; color: #374151;">
+                                    Button not working?
+                                </p>
+                                <p style="margin: 0 0 12px 0; font-size: 14px; color: #6b7280; line-height: 1.5;">
+                                    Copy and paste this link into your browser:
+                                </p>
+                                <div style="background-color: #ffffff; border: 1px solid #d1d5db; border-radius: 6px; padding: 12px; word-break: break-all;">
+                                    <a href="{{verification_url}}" style="color: #ec4899; text-decoration: none; font-size: 14px;">
+                                        {{verification_url}}
+                                    </a>
+                                </div>
+                            </div>
+                            
+                            <!-- Security Notice -->
+                            <div style="background-color: #fef3c7; border: 1px solid #f59e0b; border-radius: 8px; padding: 20px; margin-bottom: 32px;">
+                                <div style="display: flex; align-items: flex-start;">
+                                    <!-- Info Icon -->
+                                    <div style="margin-right: 12px; margin-top: 2px;">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <circle cx="12" cy="12" r="10" stroke="#f59e0b" stroke-width="2"/>
+                                            <path d="M12 16V12M12 8H12.01" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <p style="margin: 0 0 8px 0; font-size: 14px; font-weight: 600; color: #92400e;">
+                                            Important Information
+                                        </p>
+                                        <ul style="margin: 0; padding-left: 16px; font-size: 14px; color: #92400e; line-height: 1.5;">
+                                            <li style="margin-bottom: 4px;">This verification link will expire in 24 hours</li>
+                                            <li style="margin-bottom: 4px;">You can only use this link once</li>
+                                            <li>If you didn't create an account, please ignore this email</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    
+                    <!-- Footer -->
+                    <tr>
+                        <td style="padding: 0 40px 40px 40px;">
+                            <!-- Divider -->
+                            <div style="border-top: 1px solid #e5e7eb; margin: 32px 0; padding-top: 32px;">
+                                <!-- Welcome Message -->
+                                <div style="text-align: center; margin-bottom: 24px; background-color: #f8fafc; padding: 20px; border-radius: 8px;">
+                                    <p style="margin: 0 0 8px 0; font-size: 16px; font-weight: 600; color: #374151;">
+                                        🚀 Ready to get started?
+                                    </p>
+                                    <p style="margin: 0; font-size: 14px; color: #6b7280; line-height: 1.5;">
+                                        Once you verify your email, you'll have access to your personalized dashboard and can start exploring all our features.
+                                    </p>
+                                </div>
+                                
+                                <!-- Help Section -->
+                                <div style="text-align: center; margin-bottom: 24px;">
+                                    <p style="margin: 0 0 8px 0; font-size: 14px; font-weight: 600; color: #374151;">
+                                        Need help?
+                                    </p>
+                                    <p style="margin: 0; font-size: 14px; color: #6b7280; line-height: 1.5;">
+                                        If you're having trouble with the verification process, our support team is here to help at 
+                                        <a href="mailto:support@yourcompany.com" style="color: #ec4899; text-decoration: none;">
+                                            {{support_email}}
+                                        </a>
+                                    </p>
+                                </div>
+                                
+                                <!-- Company Info -->
+                                <div style="text-align: center;">
+                                    <p style="margin: 0 0 8px 0; font-size: 14px; font-weight: 600; color: #374151;">
+                                        {{company_name}}
+                                    </p>
+                                    <p style="margin: 0 0 16px 0; font-size: 12px; color: #9ca3af; line-height: 1.5;">
+                                        {{company_address_street}}<br>
+                                        {{company_address_city}}, {{company_address_state}} {{company_address_zip}}<br>
+                                        {{company_address_country}}
+                                    </p>
+                                    
+                                    <!-- Social Links -->
+                                    <div style="margin-bottom: 16px;">
+                                        <a href="{{social_twitter_url}}" style="display: inline-block; margin: 0 8px; text-decoration: none;">
+                                            <div style="width: 32px; height: 32px; background-color: #f3f4f6; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center;">
+                                                <!-- Twitter Icon -->
+                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="#6b7280">
+                                                    <path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/>
+                                                </svg>
+                                            </div>
+                                        </a>
+                                        <a href="{{social_linkedin_url}}" style="display: inline-block; margin: 0 8px; text-decoration: none;">
+                                            <div style="width: 32px; height: 32px; background-color: #f3f4f6; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center;">
+                                                <!-- LinkedIn Icon -->
+                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="#6b7280">
+                                                    <path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/>
+                                                    <circle cx="4" cy="4" r="2"/>
+                                                </svg>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    
+                                    <!-- Privacy Links -->
+                                    <p style="margin: 0; font-size: 12px; color: #9ca3af;">
+                                        You received this email because you created an account with us.<br>
+                                        <a href="{{privacy_policy_url}}" style="color: #6b7280; text-decoration: underline;">
+                                            Privacy Policy
+                                        </a> | 
+                                        <a href="{{terms_of_service_url}}" style="color: #6b7280; text-decoration: underline;">
+                                            Terms of Service
+                                        </a>
+                                    </p>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+    
+    <!-- Dark Mode Support -->
+    <div style="display: none; max-height: 0; overflow: hidden;">
+        &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
     </div>
-  </body>
+</body>
 </html>

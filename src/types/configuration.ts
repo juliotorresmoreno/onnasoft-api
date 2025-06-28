@@ -27,4 +27,11 @@ export interface Configuration {
     clientSecret: string;
     redirectUri: string;
   };
+  company: {
+    name: string;
+    addressStreet: string;
+    addressLine1: string;
+    addressLine2: string;
+    supportEmail: string;
+  };
 }

@@ -74,6 +74,14 @@ export class User {
   })
   plan: string;
 
+  @Column({
+    type: 'enum',
+    enum: ['user', 'admin'],
+    default: 'user',
+    comment: 'Role of the user in the system',
+  })
+  role: 'user' | 'admin';
+
   @Column({ type: 'varchar', nullable: true })
   position?: string;
 

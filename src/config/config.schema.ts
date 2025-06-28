@@ -164,6 +164,28 @@ class EnvironmentVariables {
     message: 'GOOGLE_CLIENT_SECRET must be at least 32 characters long',
   })
   GOOGLE_CLIENT_SECRET: string;
+
+  @IsString()
+  @IsNotEmpty({ message: 'COMPANY_NAME is required' })
+  COMPANY_NAME: string;
+
+  @IsString()
+  @IsNotEmpty({ message: 'COMPANY_ADDRESS_STREET is required' })
+  COMPANY_ADDRESS_STREET: string;
+
+  @IsString()
+  @IsNotEmpty({ message: 'COMPANY_ADDRESS_LINE1 is required' })
+  COMPANY_ADDRESS_LINE1: string;
+
+  @IsString()
+  COMPANY_ADDRESS_LINE2: string;
+
+  @IsString()
+  @IsNotEmpty({ message: 'COMPANY_SUPPORT_EMAIL is required' })
+  @Matches(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, {
+    message: 'COMPANY_SUPPORT_EMAIL must be a valid email address',
+  })
+  COMPANY_SUPPORT_EMAIL: string;
 }
 
 export function validate(config: Record<string, unknown>) {

@@ -47,5 +47,16 @@ export default registerAs('config', (): Configuration => {
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
       redirectUri: process.env.GOOGLE_REDIRECT_URI!,
     },
+    company: {
+      name: process.env.COMPANY_NAME || 'TechFlow Solutions',
+      addressStreet:
+        process.env.COMPANY_ADDRESS_STREET ||
+        'Av. Innovación 456, Torre Empresarial, Piso 12',
+      addressLine1:
+        process.env.COMPANY_ADDRESS_LINE1 ||
+        'Calle Tecnología 123, Edificio Alpha',
+      addressLine2: process.env.COMPANY_ADDRESS_LINE2 || '28020 Madrid, España',
+      supportEmail: process.env.COMPANY_SUPPORT_EMAIL || '',
+    },
   };
 });

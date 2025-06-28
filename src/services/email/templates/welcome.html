@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Welcome to {{company_name}}!</title>
+    <!--[if mso]>
+    <noscript>
+        <xml>
+            <o:OfficeDocumentSettings>
+                <o:PixelsPerInch>96</o:PixelsPerInch>
+            </o:OfficeDocumentSettings>
+        </xml>
+    </noscript>
+    <![endif]-->
+</head>
+<body style="margin: 0; padding: 0; background-color: #f8fafc; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;">
+    <!-- Email Container -->
+    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: #f8fafc;">
+        <tr>
+            <td align="center" style="padding: 40px 20px;">
+                <!-- Main Email Content -->
+                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="600" style="max-width: 600px; background-color: #ffffff; border-radius: 12px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);">
+                    
+                    <!-- Header -->
+                    <tr>
+                        <td style="padding: 40px 40px 0 40px; text-align: center;">
+                            <!-- Logo/Brand -->
+                            <div style="margin-bottom: 32px;">
+                                <div style="display: inline-block; width: 64px; height: 64px; background-color: #ec4899; border-radius: 12px; position: relative;">
+                                    <!-- Sparkles Icon SVG -->
+                                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+                                        <path d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423L16.5 15.75l.394 1.183a2.25 2.25 0 001.423 1.423L19.5 18.75l-1.183.394a2.25 2.25 0 00-1.423 1.423z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </div>
+                            </div>
+                            
+                            <!-- Welcome Message -->
+                            <h1 style="margin: 0 0 8px 0; font-size: 32px; font-weight: 700; color: #1f2937; line-height: 1.2;">
+                                🎉 Welcome{{#if user_name}}, {{user_name}}{{/if}}!
+                            </h1>
+                            
+                            <!-- Subtitle -->
+                            <p style="margin: 0 0 32px 0; font-size: 18px; color: #6b7280; line-height: 1.5;">
+                                You're now part of our amazing community! We're thrilled to have you on board.
+                            </p>
+                        </td>
+                    </tr>
+                    
+                    <!-- Main Content -->
+                    <tr>
+                        <td style="padding: 0 40px;">
+                            <!-- Success Message -->
+                            <div style="background-color: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 24px; margin-bottom: 32px;">
+                                <div style="display: flex; align-items: flex-start;">
+                                    <!-- Success Icon -->
+                                    <div style="margin-right: 12px; margin-top: 2px;">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="#16a34a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <p style="margin: 0 0 8px 0; font-size: 14px; font-weight: 600; color: #166534;">
+                                            Account Successfully Created!
+                                        </p>
+                                        <ul style="margin: 0; padding-left: 16px; font-size: 14px; color: #166534; line-height: 1.5;">
+                                            <li style="margin-bottom: 4px;">Your email {{user_email}} has been verified</li>
+                                            <li style="margin-bottom: 4px;">Full access to all features is now enabled</li>
+                                            <li>You can start exploring immediately</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Get Started Button -->
+                            <div style="text-align: center; margin-bottom: 32px;">
+                                <a href="{{dashboard_url}}" style="display: inline-block; padding: 16px 32px; background-color: #ec4899; color: #ffffff; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px; line-height: 1.5; transition: background-color 0.2s;">
+                                    Get Started Now
+                                </a>
+                            </div>
+                            
+                            <!-- What's Next Section -->
+                            <div style="background-color: #fdf2f8; border: 1px solid #f9a8d4; border-radius: 8px; padding: 24px; margin-bottom: 32px;">
+                                <p style="margin: 0 0 16px 0; font-size: 16px; font-weight: 600; color: #be185d;">
+                                    🚀 What's next?
+                                </p>
+                                <div style="space-y: 12px;">
+                                    <div style="display: flex; align-items: center; margin-bottom: 12px;">
+                                        <div style="width: 24px; height: 24px; background-color: #ec4899; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 12px; flex-shrink: 0;">
+                                            <span style="color: white; font-size: 12px; font-weight: bold;">1</span>
+                                        </div>
+                                        <span style="font-size: 14px; color: #be185d; font-weight: 500;">Complete your profile and add a photo</span>
+                                    </div>
+                                    <div style="display: flex; align-items: center; margin-bottom: 12px;">
+                                        <div style="width: 24px; height: 24px; background-color: #ec4899; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 12px; flex-shrink: 0;">
+                                            <span style="color: white; font-size: 12px; font-weight: bold;">2</span>
+                                        </div>
+                                        <span style="font-size: 14px; color: #be185d; font-weight: 500;">Explore our features and tools</span>
+                                    </div>
+                                    <div style="display: flex; align-items: center; margin-bottom: 12px;">
+                                        <div style="width: 24px; height: 24px; background-color: #ec4899; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 12px; flex-shrink: 0;">
+                                            <span style="color: white; font-size: 12px; font-weight: bold;">3</span>
+                                        </div>
+                                        <span style="font-size: 14px; color: #be185d; font-weight: 500;">Connect with other community members</span>
+                                    </div>
+                                    <div style="display: flex; align-items: center;">
+                                        <div style="width: 24px; height: 24px; background-color: #ec4899; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 12px; flex-shrink: 0;">
+                                            <span style="color: white; font-size: 12px; font-weight: bold;">4</span>
+                                        </div>
+                                        <span style="font-size: 14px; color: #be185d; font-weight: 500;">Set up your notification preferences</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Special Welcome Offer -->
+                            <div style="background-color: #fef3c7; border: 1px solid #f59e0b; border-radius: 8px; padding: 20px; margin-bottom: 32px;">
+                                <div style="display: flex; align-items: flex-start;">
+                                    <!-- Gift Icon -->
+                                    <div style="margin-right: 12px; margin-top: 2px;">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M12 8V21M12 8C12 8 14.5 6 16 6C18.5 6 20 7.5 20 10C20 12.5 18.5 14 16 14H12M12 8C12 8 9.5 6 8 6C5.5 6 4 7.5 4 10C4 12.5 5.5 14 8 14H12M7 21H17C18.1046 21 19 20.1046 19 19V14H5V19C5 20.1046 5.89543 21 7 21Z" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <p style="margin: 0 0 8px 0; font-size: 14px; font-weight: 600; color: #92400e;">
+                                            🎁 Welcome Bonus!
+                                        </p>
+                                        <p style="margin: 0 0 12px 0; font-size: 14px; color: #92400e; line-height: 1.5;">
+                                            As a new member, you get <strong>30 days of premium features</strong> absolutely free! This includes:
+                                        </p>
+                                        <ul style="margin: 0; padding-left: 16px; font-size: 14px; color: #92400e; line-height: 1.5;">
+                                            <li style="margin-bottom: 4px;">Access to all premium tools and features</li>
+                                            <li style="margin-bottom: 4px;">Priority customer support</li>
+                                            <li>Exclusive content and resources</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Quick Links -->
+                            <div style="background-color: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 24px; margin-bottom: 32px;">
+                                <p style="margin: 0 0 16px 0; font-size: 14px; font-weight: 600; color: #374151;">
+                                    Quick Links to Get You Started:
+                                </p>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                                    <a href="{{dashboard_url}}" style="display: block; padding: 12px; background-color: #ffffff; border: 1px solid #d1d5db; border-radius: 6px; text-decoration: none; color: #374151; font-size: 14px; font-weight: 500; text-align: center;">
+                                        📊 Dashboard
+                                    </a>
+                                    <a href="{{profile_url}}" style="display: block; padding: 12px; background-color: #ffffff; border: 1px solid #d1d5db; border-radius: 6px; text-decoration: none; color: #374151; font-size: 14px; font-weight: 500; text-align: center;">
+                                        👤 Profile
+                                    </a>
+                                    <a href="{{help_url}}" style="display: block; padding: 12px; background-color: #ffffff; border: 1px solid #d1d5db; border-radius: 6px; text-decoration: none; color: #374151; font-size: 14px; font-weight: 500; text-align: center;">
+                                        ❓ Help Center
+                                    </a>
+                                    <a href="{{community_url}}" style="display: block; padding: 12px; background-color: #ffffff; border: 1px solid #d1d5db; border-radius: 6px; text-decoration: none; color: #374151; font-size: 14px; font-weight: 500; text-align: center;">
+                                        👥 Community
+                                    </a>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    
+                    <!-- Footer -->
+                    <tr>
+                        <td style="padding: 0 40px 40px 40px;">
+                            <!-- Divider -->
+                            <div style="border-top: 1px solid #e5e7eb; margin: 32px 0; padding-top: 32px;">
+                                <!-- Thank You Message -->
+                                <div style="text-align: center; margin-bottom: 24px; background-color: #f8fafc; padding: 20px; border-radius: 8px;">
+                                    <p style="margin: 0 0 8px 0; font-size: 16px; font-weight: 600; color: #374151;">
+                                        Thank you for joining us! 🙏
+                                    </p>
+                                    <p style="margin: 0; font-size: 14px; color: #6b7280; line-height: 1.5;">
+                                        We're committed to providing you with the best experience possible. If you have any questions or need help getting started, don't hesitate to reach out.
+                                    </p>
+                                </div>
+                                
+                                <!-- Help Section -->
+                                <div style="text-align: center; margin-bottom: 24px;">
+                                    <p style="margin: 0 0 8px 0; font-size: 14px; font-weight: 600; color: #374151;">
+                                        Need help getting started?
+                                    </p>
+                                    <p style="margin: 0; font-size: 14px; color: #6b7280; line-height: 1.5;">
+                                        Our friendly support team is here to help at 
+                                        <a href="mailto:{{support_email}}" style="color: #ec4899; text-decoration: none;">
+                                            {{support_email}}
+                                        </a>
+                                    </p>
+                                </div>
+                                
+                                <!-- Company Info -->
+                                <div style="text-align: center;">
+                                    <p style="margin: 0 0 8px 0; font-size: 14px; font-weight: 600; color: #374151;">
+                                        {{company_name}}
+                                    </p>
+                                    <p style="margin: 0 0 16px 0; font-size: 12px; color: #9ca3af; line-height: 1.5;">
+                                        {{company_address_street}}<br>
+                                        {{company_address_city}}, {{company_address_state}} {{company_address_zip}}<br>
+                                        {{company_address_country}}
+                                    </p>
+                                    
+                                    <!-- Social Links -->
+                                    <div style="margin-bottom: 16px;">
+                                        <a href="{{social_twitter_url}}" style="display: inline-block; margin: 0 8px; text-decoration: none;">
+                                            <div style="width: 32px; height: 32px; background-color: #f3f4f6; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center;">
+                                                <!-- Twitter Icon -->
+                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="#6b7280">
+                                                    <path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/>
+                                                </svg>
+                                            </div>
+                                        </a>
+                                        <a href="{{social_linkedin_url}}" style="display: inline-block; margin: 0 8px; text-decoration: none;">
+                                            <div style="width: 32px; height: 32px; background-color: #f3f4f6; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center;">
+                                                <!-- LinkedIn Icon -->
+                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="#6b7280">
+                                                    <path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/>
+                                                    <circle cx="4" cy="4" r="2"/>
+                                                </svg>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    
+                                    <!-- Privacy Links -->
+                                    <p style="margin: 0; font-size: 12px; color: #9ca3af;">
+                                        You received this welcome email because you created an account with us.<br>
+                                        <a href="{{privacy_policy_url}}" style="color: #6b7280; text-decoration: underline;">
+                                            Privacy Policy
+                                        </a> | 
+                                        <a href="{{terms_of_service_url}}" style="color: #6b7280; text-decoration: underline;">
+                                            Terms of Service
+                                        </a>
+                                    </p>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+    
+    <!-- Dark Mode Support -->
+    <div style="display: none; max-height: 0; overflow: hidden;">
+        &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+    </div>
+</body>
+</html>
