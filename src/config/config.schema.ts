@@ -186,6 +186,16 @@ class EnvironmentVariables {
     message: 'COMPANY_SUPPORT_EMAIL must be a valid email address',
   })
   COMPANY_SUPPORT_EMAIL: string;
+
+  @IsString()
+  @IsNotEmpty({ message: 'GOOGLE_API_KEY is required' })
+  @MinLength(32, {
+    message: 'GOOGLE_API_KEY must be at least 32 characters long',
+  })
+  @Matches(/^[A-Za-z0-9_-]{39}$/, {
+    message: 'GOOGLE_API_KEY must be a valid Google API key format',
+  })
+  GOOGLE_API_KEY: string;
 }
 
 export function validate(config: Record<string, unknown>) {

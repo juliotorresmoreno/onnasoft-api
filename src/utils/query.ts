@@ -65,6 +65,12 @@ export class QueryParams<T> {
   @ValidateNested()
   @Type(() => String)
   locale?: string;
+
+  @IsOptional()
+  @IsNumber()
+  @ValidateNested()
+  @Type(() => Number)
+  page?: number;
 }
 
 const operatorMap: Record<string, (val: any) => FindOperator<any>> = {
@@ -171,6 +177,10 @@ export function buildFindManyOptions<T>(
     (query.limit ?? query.take !== undefined)
       ? Number(query.limit ?? query.take)
       : 10;
+
+  if (query.page !== undefined) {
+    options.skip = (Number(query.page) - 1) * options.take;
+  }
 
   return options;
 }

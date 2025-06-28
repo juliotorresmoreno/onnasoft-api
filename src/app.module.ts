@@ -39,6 +39,7 @@ import { Media } from './entities/Media';
 import { Comment } from './entities/Comment';
 import { PostLike } from './entities/PostLike';
 import { StatsModule } from './resources/stats/stats.module';
+import { AiModule } from './resources/ai/ai.module';
 
 const envPath = `.env.${process.env.NODE_ENV ?? 'development'}`;
 const envFileExists = fs.existsSync(envPath);
@@ -106,6 +107,7 @@ const envFileExists = fs.existsSync(envPath);
     MediaModule,
     CommentsModule,
     StatsModule,
+    AiModule,
   ],
   controllers: [AppController],
   providers: [AppService, EmailService, EmbeddingService],

@@ -26,6 +26,7 @@ export interface Configuration {
     clientId: string;
     clientSecret: string;
     redirectUri: string;
+    googleApiKey: string;
   };
   company: {
     name: string;

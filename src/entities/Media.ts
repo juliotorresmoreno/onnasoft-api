@@ -13,9 +13,6 @@ export class Media {
   @PrimaryGeneratedColumn('increment')
   id: number;
 
-  @Column({ type: 'varchar', nullable: false })
-  alt: string;
-
   @Index({ unique: true })
   @Column({ type: 'varchar', nullable: true })
   filename?: string;

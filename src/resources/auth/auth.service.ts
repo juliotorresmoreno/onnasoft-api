@@ -19,7 +19,6 @@ import { EmailService } from '@/services/email/email.service';
 import { OauthIdTokenPayload } from '@/types/jwt';
 import { ConfigService } from '@nestjs/config';
 import { Configuration } from '@/types/configuration';
-import { Role } from '@/types/role';
 import { NotificationsService } from '../notifications/notifications.service';
 import { Notification } from '@/entities/Notification';
 import { GoogleAuthUser } from '@/types/models';
@@ -407,7 +406,11 @@ export class AuthService {
       relations: ['photo'],
     });
 
-    const payload = { email: user.email, sub: user.id, role: Role.User };
+    const payload = {
+      email: user.email,
+      sub: user.id,
+      role: updatedUser?.role,
+    };
 
     const access_token = this.jwtService.sign(payload, {
       expiresIn: '7d',
