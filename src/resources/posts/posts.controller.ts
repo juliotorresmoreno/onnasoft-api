@@ -50,7 +50,11 @@ export class PostsController {
     @Request() req: Express.Request & { user: User },
     @Body(new ValidationPipe()) payload: CreatePostDto,
   ) {
-    return this.postsService.create({ ...payload, author_id: req.user.id });
+    this.postsService.create({ ...payload, author_id: req.user.id });
+
+    return {
+      message: 'Post created successfully',
+    };
   }
 
   @SetMetadata('roles', [Role.User, Role.Admin])
