@@ -13,6 +13,7 @@ export class EmbeddingService {
       });
 
       if (!res.ok) {
+        console.log(res.status, res.statusText, await res.text());
         throw new Error(`HTTP error: ${res.status}`);
       }
 

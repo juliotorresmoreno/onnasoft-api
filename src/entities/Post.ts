@@ -36,6 +36,9 @@ export class Post {
   @Column({ type: 'varchar', nullable: false })
   content: string;
 
+  @Column({ type: 'text', nullable: true })
+  image_prompt?: string;
+
   @Column({ type: 'int', nullable: true })
   @Index()
   category_id: number;
@@ -68,7 +71,11 @@ export class Post {
   @JoinColumn({ name: 'cover_image_id' })
   cover_image?: Media;
 
-  @OneToMany(() => PostTranslation, (translation) => translation.post)
+  @OneToMany(() => PostTranslation, (translation) => translation.post, {
+    cascade: true,
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
   translations: PostTranslation[];
 
   @Column({ type: 'boolean', default: true, nullable: true })

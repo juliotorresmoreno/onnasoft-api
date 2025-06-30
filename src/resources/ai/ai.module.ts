@@ -7,5 +7,6 @@ import { MediaModule } from '../media/media.module';
   controllers: [AiController],
   providers: [AiService],
   imports: [MediaModule],
+  exports: [AiService],
 })
 export class AiModule {}

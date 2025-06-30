@@ -8,7 +8,7 @@ import {
   Unique,
 } from 'typeorm';
 
-@Entity({ name: 'post_translation_vectors' })
+@Entity({ name: 'post_translation_vectors', synchronize: false })
 @Unique(['post_translation_id', 'locale'])
 export class PostTranslationVector {
   @PrimaryGeneratedColumn()

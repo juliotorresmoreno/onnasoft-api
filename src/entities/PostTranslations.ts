@@ -21,7 +21,7 @@ export class PostTranslation {
   @Index()
   post_id: number;
 
-  @ManyToOne(() => Post, { onDelete: 'SET NULL', onUpdate: 'CASCADE' })
+  @ManyToOne(() => Post, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
   @JoinColumn({ name: 'post_id' })
   post?: Post;
 
@@ -43,9 +43,6 @@ export class PostTranslation {
 
   @Column({ type: 'varchar', nullable: true })
   slug?: string;
-
-  @Column({ type: 'varchar', nullable: true })
-  category?: string;
 
   @CreateDateColumn({ type: 'timestamptz', precision: 3 })
   @Index()

@@ -1,14 +1,15 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import { GoogleGenAI } from '@google/genai';
+import { ContentListUnion, GoogleGenAI } from '@google/genai';
 import { ConfigService } from '@nestjs/config';
 import { Configuration } from '@/types/configuration';
 import { MediaService } from '../media/media.service';
 import * as sharp from 'sharp';
+import { Language, languageNames } from '@/types/languages';
 
 @Injectable()
 export class AiService {
   private readonly genAI: GoogleGenAI;
-  private readonly GEMMA_MODEL = 'gemini-1.5-flash';
+  private readonly GEMMA_MODEL = 'gemini-2.5-flash-preview-tts';
   private readonly GEMMA_IMAGE_MODEL = 'gemini-2.0-flash-exp-image-generation';
 
   constructor(
@@ -23,14 +24,7 @@ export class AiService {
 
   async generateImage(prompt: string) {
     try {
-      // Crear nombre de archivo único basado en el prompt y timestamp
       const filename = this.generateFilenameFromPrompt(prompt);
-
-      const safePrompt = `${prompt} 
-            - Debe ser una representación artística estilizada, no fotorealista
-            - No debe representar lugares específicos o reconocibles
-            - Usar estilo ilustrado o artístico
-            - Evitar detalles que puedan identificar ubicaciones geográficas`;
 
       const result = await this.genAI.models.generateContent({
         model: this.GEMMA_IMAGE_MODEL,
@@ -38,9 +32,10 @@ export class AiService {
           {
             role: 'user',
             parts: [
-              { text: safePrompt },
               {
-                text: 'Esta imagen debe cumplir con las políticas de contenido y ser una representación artística genérica.',
+                text: `You are generating an illustration for a blog post. The image should be suitable as a featured 
+                      thumbnail for a technical blog article. It should be visually engaging and square or rectangular 
+                      for web display. Prompt: "${prompt}"`,
               },
             ],
           },
@@ -119,7 +114,7 @@ export class AiService {
     // Parte aleatoria de 6 caracteres (base36)
     const randomPart = Math.random().toString(36).substring(2, 8).toUpperCase();
 
-    return `${cleanPrompt}-${timestamp}-${randomPart}.png`;
+    return `${cleanPrompt}-${timestamp}-${randomPart}.webp`;
   }
 
   /**
@@ -128,16 +123,25 @@ export class AiService {
    * @returns La respuesta generada por el modelo.
    * @throws InternalServerErrorException si hay un problema con la configuración de la API o la llamada al modelo.
    */
-  async generateResponse(prompt: string): Promise<{ response: string }> {
+  async generateResponse(
+    prompt: string,
+    instructions?: string,
+  ): Promise<{ response: string }> {
     try {
+      const contents: ContentListUnion = [];
+      if (instructions) {
+        contents.push({
+          role: 'user',
+          parts: [{ text: instructions }],
+        });
+      }
+      contents.push({
+        role: 'user',
+        parts: [{ text: prompt }],
+      });
       const result = await this.genAI.models.generateContent({
         model: this.GEMMA_MODEL,
-        contents: [
-          {
-            role: 'user',
-            parts: [{ text: prompt }],
-          },
-        ],
+        contents,
       });
 
       const textPart = result?.candidates?.[0]?.content?.parts?.find(
@@ -156,5 +160,31 @@ export class AiService {
         'Fallo al generar respuesta de IA. Inténtalo de nuevo más tarde.',
       );
     }
+  }
+
+  async generateContent(title: string, excerpt?: string, content?: string) {
+    const instructions = `You are a technical writer. Write a detailed, in-depth technical article in 
+          Markdown format (aim for around 10000 words).
+          Prioritize clarity and educational value. Use headings (#, ##), bullet points, and structured 
+          sections to organize the content.
+          Only include one or two short code examples if the target audience is technical and the concept 
+          clearly benefits from code illustration. 
+          Avoid long or repetitive code blocks.
+          Do not include meta comments, placeholders, or any hyperlinks (e.g. "[link here]", "[image here]", 
+          "insert CTA", or actual URLs).
+          Only return the article content exactly as it should be published.`;
+
+    const prompt = `Title: ${title}\n\nReference content: ${content}\n\nSuggested focus: "${excerpt}"`;
+
+    const { response } = await this.generateResponse(prompt, instructions);
+
+    return response;
+  }
+
+  async translate(text: string, targetLang: Language) {
+    if (!text) return '';
+    const instructions = `You are a translator. Translate everything to ${languageNames[targetLang]} with no explanations.`;
+
+    return (await this.generateResponse(text, instructions)).response;
   }
 }
