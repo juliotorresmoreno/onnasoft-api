@@ -32,33 +32,27 @@ export class PostsService {
   }
 
   async create(post: CreatePostDto & { author_id: number }) {
-    const translations: Partial<PostTranslation>[] = [];
+    return this.dataSource.transaction(async (manager) => {
+      const translations: Partial<
+        PostTranslation & { embedding?: number[] }
+      >[] = [];
 
-    console.log('[CREATE] Starting post creation...');
-
-    const result = await this.dataSource.transaction(async (manager) => {
-      console.log('[TRANSACTION] Translating title to generate slug...');
       const slug = (await this.aiService.translate(post.title, 'en'))
         .toLowerCase()
         .trim()
         .replace(/\s+/g, '-')
         .replace(/[^a-z0-9-]/g, '');
 
-      console.log(`[TRANSACTION] Generated slug: ${slug}`);
-
-      console.log('[TRANSACTION] Generating content...');
       const content = await this.aiService.generateContent(
         post.title,
         post.excerpt,
         post.image_prompt,
       );
 
-      console.log('[TRANSACTION] Generating image...');
       const image = await this.aiService.generateImage(
         post.image_prompt || `A blog post about ${post.title}`,
       );
 
-      console.log('[TRANSACTION] Creating Post entity...');
       const newPost = this.postsRepository.create({
         ...post,
         slug,
@@ -67,12 +61,9 @@ export class PostsService {
         cover_thumbnail_id: image.thumbnail?.id,
       });
 
-      console.log('[TRANSACTION] Saving Post...');
       const savedPost = await manager.save(Post, newPost);
-      console.log('[TRANSACTION] Post saved with ID:', savedPost.id);
 
       for (const lang of languages) {
-        console.log(`[TRANSLATIONS] Translating to ${lang}...`);
         const translatedTitle = await this.aiService.translate(
           post.title,
           lang,
@@ -82,6 +73,13 @@ export class PostsService {
           : undefined;
         const translatedContent = await this.aiService.translate(content, lang);
 
+        const embedding = await this.embeddingService.generateEmbedding(
+          [translatedTitle, translatedContent]
+            .filter(Boolean)
+            .join('\n')
+            .trim(),
+        );
+
         translations.push({
           locale: lang,
           translated_title: translatedTitle,
@@ -89,45 +87,25 @@ export class PostsService {
           translated_content: translatedContent,
           slug,
           post_id: savedPost.id,
+          embedding,
         });
       }
 
-      console.log('[TRANSLATIONS] Saving translations...');
       const postTranslations = manager.create(PostTranslation, translations);
-      await manager.save(PostTranslation, postTranslations);
+      const savedTranslations = await manager.save(
+        PostTranslation,
+        postTranslations,
+      );
 
-      return savedPost;
-    });
+      for (const translation of savedTranslations) {
+        const embedding = translations.find(
+          (t) => t.locale === translation.locale,
+        )?.embedding;
+        if (!embedding) continue;
 
-    console.log('[EMBEDDING] Generating embeddings...');
-    await Promise.all(
-      translations.map(async (translation) => {
-        if (!translation.locale || !translation.translated_content) {
-          console.warn(
-            `[EMBEDDING] Skipping embedding for incomplete translation:`,
-            translation,
-          );
-          return;
-        }
-
-        const content = [
-          translation.translated_title,
-          translation.translated_content,
-        ]
-          .filter(Boolean)
-          .join('\n')
-          .replace(/\s+/g, ' ')
-          .trim();
-
-        const embedding =
-          await this.embeddingService.generateEmbedding(content);
-
-        console.log(
-          `[EMBEDDING] Saving embedding for locale ${translation.locale}...`,
-        );
-        await this.dataSource.query(
+        await manager.query(
           `INSERT INTO post_translation_vectors
-           (post_translation_id, locale, embedding, updated_at)
+         (post_translation_id, locale, embedding, updated_at)
          VALUES ($1, $2, $3, NOW())
          ON CONFLICT (post_translation_id, locale)
          DO UPDATE SET
@@ -135,11 +113,10 @@ export class PostsService {
            updated_at = NOW()`,
           [translation.id, translation.locale, `[${embedding.join(', ')}]`],
         );
-      }),
-    );
+      }
 
-    console.log('[CREATE] Post creation completed.');
-    return result;
+      return savedPost;
+    });
   }
 
   async search(query: string, locale: string = 'en', limit?: number) {

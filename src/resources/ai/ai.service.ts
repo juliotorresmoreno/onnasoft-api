@@ -9,7 +9,7 @@ import { Language, languageNames } from '@/types/languages';
 @Injectable()
 export class AiService {
   private readonly genAI: GoogleGenAI;
-  private readonly GEMMA_MODEL = 'gemini-2.5-flash-preview-tts';
+  private readonly GEMMA_MODEL = 'gemma-3-27b-it';
   private readonly GEMMA_IMAGE_MODEL = 'gemini-2.0-flash-exp-image-generation';
 
   constructor(
@@ -33,9 +33,9 @@ export class AiService {
             role: 'user',
             parts: [
               {
-                text: `You are generating an illustration for a blog post. The image should be suitable as a featured 
-                      thumbnail for a technical blog article. It should be visually engaging and square or rectangular 
-                      for web display. Prompt: "${prompt}"`,
+                text: `Generate a square image (1:1 aspect ratio) related to the following blog post title.
+                 It should be suitable as a featured image for a technical blog.
+                 Title: "${prompt}"`,
               },
             ],
           },
@@ -55,7 +55,10 @@ export class AiService {
 
       const buffer = Buffer.from(imagePart.inlineData.data, 'base64');
 
-      const webpBuffer = await sharp(buffer).toFormat('webp').toBuffer();
+      const webpBuffer = await sharp(buffer)
+        .resize({ width: 768 })
+        .toFormat('webp')
+        .toBuffer();
       const thumbBuffer = await sharp(webpBuffer)
         .resize({ width: 300 })
         .toFormat('webp')
@@ -164,15 +167,15 @@ export class AiService {
 
   async generateContent(title: string, excerpt?: string, content?: string) {
     const instructions = `You are a technical writer. Write a detailed, in-depth technical article in 
-          Markdown format (aim for around 10000 words).
+          Markdown format (aim for around 6000 ~ 8000 words).
           Prioritize clarity and educational value. Use headings (#, ##), bullet points, and structured 
           sections to organize the content.
           Only include one or two short code examples if the target audience is technical and the concept 
           clearly benefits from code illustration. 
           Avoid long or repetitive code blocks.
-          Do not include meta comments, placeholders, or any hyperlinks (e.g. "[link here]", "[image here]", 
-          "insert CTA", or actual URLs).
-          Only return the article content exactly as it should be published.`;
+          Do not include meta comments, placeholders, any hyperlinks (e.g. "[link here]", "[image here]", 
+          "insert CTA", or actual URLs), or the article title.
+          Only return the article body exactly as it should be published.`;
 
     const prompt = `Title: ${title}\n\nReference content: ${content}\n\nSuggested focus: "${excerpt}"`;
 
