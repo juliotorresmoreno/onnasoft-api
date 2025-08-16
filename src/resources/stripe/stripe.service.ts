@@ -14,11 +14,10 @@ export class StripeService {
     }
 
     this.stripe = new Stripe(stripeConf.secretKey, {
-      apiVersion: '2025-05-28.basil',
       appInfo: {
-        name: 'ProMeet',
+        name: 'OnnaSoft',
         version: '1.0.0',
-        url: 'https://pro-meets.com',
+        url: 'https://onnasoft.us',
       },
       typescript: true,
     });

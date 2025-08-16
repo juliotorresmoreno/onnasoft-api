@@ -60,3 +60,5 @@ __pycache__
 *.http
 *.pyc
 
+media/*
+k8s/config/secrets.yaml

@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api
+  namespace: onnasoft
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api
+  template:
+    metadata:
+      labels:
+        app: api
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+      containers:
+        - name: api
+          image: jliotorresmoreno/onnasoft-api:v1.0.0
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3000
+          resources:
+            limits:
+              cpu: "16"
+              memory: "8Gi"
+              ephemeral-storage: "4Gi"
+            requests:
+              cpu: "100m"
+              memory: "4Gi"
+              ephemeral-storage: "4Gi"
+          envFrom:
+            - secretRef:
+                name: onnasoft-secret
+          volumeMounts:
+            - name: db-media
+              mountPath: /app/media
+      volumes:
+        - name: db-media
+          persistentVolumeClaim:
+            claimName: db-media-pvc

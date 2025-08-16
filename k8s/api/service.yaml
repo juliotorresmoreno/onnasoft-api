@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: onnasoft-api-service
+  namespace: onnasoft
+spec:
+  type: LoadBalancer
+  selector:
+    app: api
+  ports:
+    - name: service
+      port: 8050
+      targetPort: 3000
