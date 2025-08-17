@@ -2,9 +2,8 @@
 FROM node:current-alpine3.22 AS builder
 
 WORKDIR /app
-RUN npm install -g npm
+RUN npm install -g npm@latest @nestjs/cli
 COPY package*.json ./
-RUN npm install -g @nestjs/cli
 RUN npm i --omit=dev
 RUN npm cache clean --force
 
@@ -24,4 +23,4 @@ COPY --from=builder /app/src/services/email/templates ./src/services/email/templ
 USER node
 
 EXPOSE 3000
-CMD ["npm", "run", "start:prod"]
+CMD ["npm", "run", "start:full"]
