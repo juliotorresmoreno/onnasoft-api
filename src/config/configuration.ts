@@ -59,5 +59,8 @@ export default registerAs('config', (): Configuration => {
       addressLine2: process.env.COMPANY_ADDRESS_LINE2 || '28020 Madrid, España',
       supportEmail: process.env.COMPANY_SUPPORT_EMAIL || '',
     },
+    embedding: {
+      endpoint: process.env.EMBEDDING_ENDPOINT || 'http://localhost:8001/embed',
+    },
   };
 });

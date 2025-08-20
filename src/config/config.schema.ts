@@ -196,6 +196,10 @@ class EnvironmentVariables {
     message: 'GOOGLE_API_KEY must be a valid Google API key format',
   })
   GOOGLE_API_KEY: string;
+
+  @IsString()
+  @IsNotEmpty({ message: 'EMBEDDING_ENDPOINT is required' })
+  EMBEDDING_ENDPOINT: string;
 }
 
 export function validate(config: Record<string, unknown>) {

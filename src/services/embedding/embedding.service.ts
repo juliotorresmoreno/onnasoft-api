@@ -1,8 +1,16 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { Configuration } from '@/types/configuration';
+import { Injectable, HttpException, HttpStatus, Inject } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class EmbeddingService {
-  private readonly endpoint = 'http://localhost:8001/embed';
+  private readonly endpoint: string = 'http://localhost:8001/embed';
+
+  constructor(@Inject() private readonly configService: ConfigService) {
+    const config = this.configService.get('config') as Configuration;
+
+    this.endpoint = config.embedding.endpoint || this.endpoint;
+  }
 
   async generateEmbedding(text: string): Promise<number[]> {
     try {

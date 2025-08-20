@@ -35,4 +35,7 @@ export interface Configuration {
     addressLine2: string;
     supportEmail: string;
   };
+  embedding: {
+    endpoint: string;
+  };
 }
