@@ -9,5 +9,5 @@ spec:
     app: api
   ports:
     - name: service
-      port: 8050
+      port: 18080
       targetPort: 3000
